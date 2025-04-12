@@ -5,14 +5,6 @@ import { useToast } from '@/hooks/use-toast';
 import { useQueryClient } from '@tanstack/react-query';
 import { CreateTaskInput } from '@/types';
 import { EmojiSelector } from './emoji-selector';
-import { format } from 'date-fns';
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover"
-import { Calendar } from "@/components/ui/calendar"
-import { cn } from '@/lib/utils';
 
 interface TaskAddFormProps {
   onAddSuccess?: () => void;
@@ -21,13 +13,9 @@ interface TaskAddFormProps {
 export function TaskAddForm({ onAddSuccess }: TaskAddFormProps) {
   const [title, setTitle] = useState('');
   const [energyLevel, setEnergyLevel] = useState<"high" | "medium" | "low">("medium");
+  const [category, setCategory] = useState<"personal" | "work" | "family" | "health">("personal");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [selectedEmoji, setSelectedEmoji] = useState<string>('');
-  const [description, setDescription] = useState<string>('');
-  const [priority, setPriority] = useState<"high" | "medium" | "low">("medium");
-  const [dueDate, setDueDate] = useState<Date | null>(null);
-  const [category, setCategory] = useState<"personal" | "work" | "family" | "health">("personal");
-  const [showAdvanced, setShowAdvanced] = useState(false);
   
   const { toast } = useToast();
   const queryClient = useQueryClient();
@@ -85,24 +73,13 @@ export function TaskAddForm({ onAddSuccess }: TaskAddFormProps) {
       
       const taskData: CreateTaskInput = {
         title: finalTitle,
-        energyLevel: showAdvanced ? energyLevel : detectedEnergy,
-        description: description || undefined,
-        priority: showAdvanced ? priority : undefined,
-        dueDate: dueDate || undefined,
-        category: showAdvanced ? category : undefined
+        energyLevel: detectedEnergy,
       };
       
       await apiRequest('POST', '/api/tasks', taskData);
       
       // Formular leeren
       setTitle('');
-      setDescription('');
-      setDueDate(null);
-      setPriority('medium');
-      setEnergyLevel('medium');
-      setCategory('personal');
-      setSelectedEmoji('');
-      setShowAdvanced(false);
       resetTranscript();
       
       // Erfolgsmeldung anzeigen
@@ -201,6 +178,45 @@ export function TaskAddForm({ onAddSuccess }: TaskAddFormProps) {
             </button>
           </div>
         </form>
+        
+        <div className="mt-2 flex gap-2">
+          <button
+            type="button"
+            onClick={() => setCategory("personal")}
+            className={`px-3 py-1 rounded-full text-xs ${
+              category === "personal" ? "bg-primary text-white" : "bg-muted"
+            }`}
+          >
+            👤 Persönlich
+          </button>
+          <button
+            type="button"
+            onClick={() => setCategory("work")}
+            className={`px-3 py-1 rounded-full text-xs ${
+              category === "work" ? "bg-primary text-white" : "bg-muted"
+            }`}
+          >
+            💼 Arbeit
+          </button>
+          <button
+            type="button"
+            onClick={() => setCategory("family")}
+            className={`px-3 py-1 rounded-full text-xs ${
+              category === "family" ? "bg-primary text-white" : "bg-muted"
+            }`}
+          >
+            👨‍👩‍👧‍👦 Familie
+          </button>
+          <button
+            type="button"
+            onClick={() => setCategory("health")}
+            className={`px-3 py-1 rounded-full text-xs ${
+              category === "health" ? "bg-primary text-white" : "bg-muted"
+            }`}
+          >
+            🏃 Gesundheit
+          </button>
+        </div>
       </div>
       
       {isListening && (
@@ -226,126 +242,6 @@ export function TaskAddForm({ onAddSuccess }: TaskAddFormProps) {
               <span className="text-lg">{selectedEmoji}</span>
             </div>
           )}
-        </div>
-      )}
-
-      {/* Toggle für erweiterte Optionen */}
-      <button
-        type="button"
-        onClick={() => setShowAdvanced(!showAdvanced)}
-        className="text-xs text-muted-foreground hover:text-foreground mt-2 flex items-center gap-1"
-      >
-        <svg 
-          xmlns="http://www.w3.org/2000/svg" 
-          viewBox="0 0 24 24" 
-          fill="none" 
-          stroke="currentColor" 
-          strokeWidth="2" 
-          strokeLinecap="round" 
-          strokeLinejoin="round" 
-          className={`h-3 w-3 transition-transform ${showAdvanced ? 'rotate-180' : ''}`}
-        >
-          <polyline points="6 9 12 15 18 9"></polyline>
-        </svg>
-        {showAdvanced ? "Weniger Optionen" : "Mehr Optionen"}
-      </button>
-
-      {/* Erweiterte Optionen */}
-      {showAdvanced && (
-        <div className="mt-3 space-y-3 text-sm animate-in fade-in-50 duration-300">
-          {/* Beschreibung */}
-          <div>
-            <label htmlFor="description" className="text-xs text-muted-foreground block mb-1">
-              Beschreibung
-            </label>
-            <textarea
-              id="description"
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-              className="w-full px-3 py-2 rounded-lg bg-card border border-border shadow-sm text-sm placeholder:text-muted-foreground focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none transition-all h-20 resize-none"
-              placeholder="Kurze Beschreibung der Aufgabe..."
-            />
-          </div>
-
-          {/* Reihe mit Priorität und Energielevel */}
-          <div className="grid grid-cols-2 gap-3">
-            <div>
-              <label htmlFor="priority" className="text-xs text-muted-foreground block mb-1">
-                Priorität
-              </label>
-              <select
-                id="priority"
-                value={priority}
-                onChange={(e) => setPriority(e.target.value as "high" | "medium" | "low")}
-                className="w-full px-3 py-2 h-10 rounded-lg bg-card border border-border shadow-sm text-sm focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none transition-all"
-              >
-                <option value="low">Niedrig</option>
-                <option value="medium">Mittel</option>
-                <option value="high">Hoch</option>
-              </select>
-            </div>
-            <div>
-              <label htmlFor="energyLevel" className="text-xs text-muted-foreground block mb-1">
-                Energiestufe
-              </label>
-              <select
-                id="energyLevel"
-                value={energyLevel}
-                onChange={(e) => setEnergyLevel(e.target.value as "high" | "medium" | "low")}
-                className="w-full px-3 py-2 h-10 rounded-lg bg-card border border-border shadow-sm text-sm focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none transition-all"
-              >
-                <option value="low">Niedrig</option>
-                <option value="medium">Mittel</option>
-                <option value="high">Hoch</option>
-              </select>
-            </div>
-          </div>
-
-          {/* Reihe mit Fälligkeitsdatum und Kategorie */}
-          <div className="grid grid-cols-2 gap-3">
-            <div>
-              <label className="text-xs text-muted-foreground block mb-1">
-                Fälligkeitsdatum
-              </label>
-              <Popover>
-                <PopoverTrigger asChild>
-                  <button
-                    type="button"
-                    className={cn(
-                      "w-full flex h-10 items-center justify-start rounded-lg bg-card border border-border px-3 py-2 text-sm shadow-sm focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none transition-all",
-                      !dueDate && "text-muted-foreground"
-                    )}
-                  >
-                    {dueDate ? format(dueDate, "dd.MM.yyyy") : "Datum auswählen"}
-                  </button>
-                </PopoverTrigger>
-                <PopoverContent className="w-auto p-0" align="start">
-                  <Calendar
-                    mode="single"
-                    selected={dueDate as any}
-                    onSelect={(date) => setDueDate(date)}
-                    initialFocus
-                  />
-                </PopoverContent>
-              </Popover>
-            </div>
-            <div>
-              <label htmlFor="category" className="text-xs text-muted-foreground block mb-1">
-                Kategorie
-              </label>
-              <select
-                id="category"
-                value={category}
-                onChange={(e) => setCategory(e.target.value as "personal" | "work" | "family" | "health")}
-                className="w-full px-3 py-2 h-10 rounded-lg bg-card border border-border shadow-sm text-sm focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none transition-all"
-              >
-                <option value="personal">Persönlich</option>
-                <option value="work">Arbeit</option>
-                <option value="family">Familie</option>
-                <option value="health">Gesundheit</option>
-              </select>
-            </div>
-          </div>
         </div>
       )}
     </div>

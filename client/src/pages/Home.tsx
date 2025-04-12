@@ -112,7 +112,7 @@ export default function Home() {
 
   const uncompletedTasks = tasks.filter(task => !task.completed);
   const tasksByCategory = selectedCategory 
-    ? uncompletedTasks.filter(task => task.priority === "medium")
+    ? uncompletedTasks.filter(task => task.category === selectedCategory)
     : uncompletedTasks;
 
   const isFocusMode = focusTaskId !== null && !!focusTask;
