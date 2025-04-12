@@ -1,0 +1,37 @@
+.focus-mode-container {
+  @apply relative overflow-hidden;
+}
+
+.focus-mode-container::before {
+  content: "";
+  @apply absolute inset-0 bg-gradient-to-b from-background/80 to-background opacity-0 transition-opacity duration-700;
+}
+
+.focus-mode-active .focus-mode-container::before {
+  @apply opacity-100;
+}
+
+.focus-mode-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    to bottom,
+    rgba(var(--background-rgb), 0.2),
+    rgba(var(--background-rgb), 0.6)
+  );
+  pointer-events: none;
+}
+
+.focus-content {
+  position: relative;
+  z-index: 1;
+  transition: transform 0.5s ease-out;
+}
+
+:root {
+  --bg-default: hsl(var(--background));
+  --bg-focus: hsl(var(--background));
+}

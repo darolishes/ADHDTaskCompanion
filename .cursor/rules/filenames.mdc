@@ -1,0 +1,43 @@
+---
+description: This rule enforces single-word, lowercase file naming conventions for TypeScript files to ensure consistency and simplicity.
+globs: src/**/*.{ts,tsx}
+alwaysApply: false
+---
+
+# TypeScript File Naming
+
+## Critical Rules
+
+- Use single-word, lowercase names for all files
+- One component/feature per file
+- Use .tsx for React components
+- Use .ts for other TypeScript files
+- Use semantic directory structure:
+  - components/
+  - screens/
+  - hooks/
+  - utils/
+
+## Examples
+
+<example>
+// Good structure
+src/
+  components/
+    button.tsx    // ✓ Single word, lowercase
+    card.tsx      // ✓ Focused component
+  screens/
+    home.tsx      // ✓ Simple screen name
+  hooks/
+    auth.ts       // ✓ Feature-specific hook
+</example>
+
+<example type="invalid">
+// Bad structure
+src/
+  Components/                // ✗ PascalCase
+    ButtonComponent.tsx      // ✗ Combined words
+  pages/
+    UserProfilePage.tsx      // ✗ Combined words
+    LongComplexFileName.tsx  // ✗ Too verbose
+</example>
