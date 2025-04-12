@@ -2,7 +2,7 @@ import type { Express, Request, Response } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { z } from "zod";
-import { analyzeAndBreakdownTask, getDailyFocusSuggestions, predictTaskEmoji } from "./gemini";
+import { analyzeAndBreakdownTask, getDailyFocusSuggestions, predictTaskEmoji, analyzeNaturalLanguageTask } from "./gemini";
 import {
   insertTaskSchema,
   insertTaskStepSchema,
@@ -512,6 +512,34 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Get daily focus suggestions
+  // Analysiere natürlichsprachliche Aufgabenbeschreibung
+  app.post("/api/tasks/analyze-nlp", async (req: Request, res: Response) => {
+    try {
+      // Validiere die Anfrage
+      const requestSchema = z.object({
+        input: z.string().min(3, "Aufgabenbeschreibung muss mindestens 3 Zeichen lang sein"),
+      });
+
+      const validationResult = requestSchema.safeParse(req.body);
+      if (!validationResult.success) {
+        return res.status(400).json({
+          message: "Ungültige Anfragedaten",
+          errors: validationResult.error.format()
+        });
+      }
+
+      const { input } = validationResult.data;
+      
+      // Rufe die Gemini-API für NLP-Analyse auf
+      const analysis = await analyzeNaturalLanguageTask(input);
+      
+      return res.json(analysis);
+    } catch (error) {
+      console.error("Fehler bei der NLP-Analyse:", error);
+      return res.status(500).json({ message: "Fehler bei der Analyse der Aufgabenbeschreibung" });
+    }
+  });
+
   app.get("/api/focus/daily", async (req: Request, res: Response) => {
     try {
       const energyLevelParam = req.query.energyLevel as EnergyLevel | undefined;
