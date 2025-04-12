@@ -1,9 +1,24 @@
 import { useState, useEffect } from "react";
-import { useMediaQuery } from "@/hooks/use-media-query";
 
 export function ThemeToggle() {
   const [theme, setTheme] = useState<"light" | "dark" | "system">("system");
-  const prefersDark = useMediaQuery("(prefers-color-scheme: dark)");
+  const [prefersDark, setPrefersDark] = useState(false);
+  
+  // Check if user prefers dark mode
+  useEffect(() => {
+    const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
+    
+    // Update state initially
+    setPrefersDark(mediaQuery.matches);
+    
+    // Add listener for changes
+    const handler = (event: MediaQueryListEvent) => {
+      setPrefersDark(event.matches);
+    };
+    
+    mediaQuery.addEventListener("change", handler);
+    return () => mediaQuery.removeEventListener("change", handler);
+  }, []);
 
   useEffect(() => {
     const savedTheme = localStorage.getItem("theme") as "light" | "dark" | "system" | null;
