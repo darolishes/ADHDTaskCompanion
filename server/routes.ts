@@ -387,6 +387,35 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Emoji-Vorschläge für Aufgaben generieren
+  app.post("/api/tasks/emoji-suggestions", async (req: Request, res: Response) => {
+    try {
+      // Validiere die Anfrage
+      const requestSchema = z.object({
+        title: z.string().min(1, "Task title is required"),
+        description: z.string().optional().nullable(),
+      });
+
+      const validationResult = requestSchema.safeParse(req.body);
+      if (!validationResult.success) {
+        return res.status(400).json({
+          message: "Invalid request data",
+          errors: validationResult.error.format()
+        });
+      }
+
+      const { title, description = "" } = validationResult.data;
+      
+      // Rufe die Gemini-API für Emoji-Vorhersagen auf
+      const emojis = await predictTaskEmoji(title, description || "");
+      
+      return res.json({ emojis });
+    } catch (error) {
+      console.error("Error generating emoji suggestions:", error);
+      return res.status(500).json({ message: "Failed to generate emoji suggestions" });
+    }
+  });
+
   // Get daily focus suggestions
   app.get("/api/focus/daily", async (req: Request, res: Response) => {
     try {

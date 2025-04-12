@@ -4,6 +4,7 @@ import { apiRequest } from '@/lib/queryClient';
 import { useToast } from '@/hooks/use-toast';
 import { useQueryClient } from '@tanstack/react-query';
 import { CreateTaskInput } from '@/types';
+import { EmojiSelector } from './emoji-selector';
 
 interface TaskAddFormProps {
   onAddSuccess?: () => void;
@@ -13,6 +14,7 @@ export function TaskAddForm({ onAddSuccess }: TaskAddFormProps) {
   const [title, setTitle] = useState('');
   const [energyLevel, setEnergyLevel] = useState<"high" | "medium" | "low">("medium");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [selectedEmoji, setSelectedEmoji] = useState<string>('');
   
   const { toast } = useToast();
   const queryClient = useQueryClient();
