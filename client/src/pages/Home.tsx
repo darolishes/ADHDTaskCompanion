@@ -80,7 +80,7 @@ export default function Home() {
     ? uncompletedTasks.filter(task => task.priority === "medium")
     : uncompletedTasks;
 
-  const isFocusMode = focusTaskId !== null && focusTask;
+  const isFocusMode = focusTaskId !== null && !!focusTask;
   const isCategoryView = selectedCategory !== null;
 
   const categories = [
@@ -238,7 +238,7 @@ export default function Home() {
 
             <div className="flex-grow"></div>
 
-            <div className={`fixed bottom-12 left-0 right-0 px-4 transition-all duration-500 ${animateIn ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
+            <div className={`fixed bottom-24 left-0 right-0 px-4 transition-all duration-500 ${animateIn ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
               <div className="overflow-x-auto pb-4 -mx-4 px-4" style={{ scrollSnapType: 'x mandatory', WebkitOverflowScrolling: 'touch' }}>
                 <div className="flex gap-8 pb-6 px-2 justify-start">
                   {categories.map(category => (
@@ -260,6 +260,13 @@ export default function Home() {
           <button
             className="w-14 h-14 rounded-full bg-primary text-primary-foreground flex items-center justify-center shadow-lg hover:bg-primary/90 transition-colors"
             aria-label="Neue Aufgabe hinzufügen"
+            onClick={() => {
+              toast({
+                title: "Neue Aufgabe",
+                description: "Neue Aufgabe hinzufügen wird bald verfügbar sein.",
+                variant: "default",
+              });
+            }}
           >
             <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />

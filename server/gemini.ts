@@ -147,24 +147,44 @@ export async function getDailyFocusSuggestions(
   tasks: Task[],
   currentEnergyLevel: EnergyLevel
 ): Promise<DailyFocusResponse> {
+  // Fallback bei leerer Aufgabenliste oder wenn alle Aufgaben erledigt sind
+  if (!tasks.length || tasks.every(task => task.completed)) {
+    return {
+      topTasks: [],
+      motivationalMessage: "Keine offenen Aufgaben vorhanden. Zeit, etwas Neues zu planen!"
+    };
+  }
+
+  // Hier erstellen wir einen Beispiel-Fokusvorschlag für die Entwicklung
+  // Dadurch vermeiden wir viele API-Aufrufe während der Entwicklung
+  const uncompletedTasks = tasks.filter(task => !task.completed);
+  if (uncompletedTasks.length > 0) {
+    return {
+      topTasks: [
+        {
+          taskId: uncompletedTasks[0].id,
+          reason: "Diese Aufgabe passt gut zu deinem aktuellen Energielevel und hat eine hohe Priorität."
+        }
+      ],
+      motivationalMessage: `Du hast ${uncompletedTasks.length} Aufgabe(n) auf deiner Liste. Fokussiere dich auf eine Sache nach der anderen!`
+    };
+  }
+  
+  // Entferne diesen Block und aktiviere den Code unten für Produktion
+  return {
+    topTasks: [
+      {
+        taskId: uncompletedTasks[0].id,
+        reason: "Diese Aufgabe passt gut zu deinem aktuellen Energielevel und hat eine hohe Priorität."
+      }
+    ],
+    motivationalMessage: `Du hast ${uncompletedTasks.length} Aufgabe(n) auf deiner Liste. Fokussiere dich auf eine Sache nach der anderen!`
+  };
+
+  /* In der Produktionsversion für die KI-Abfrage:
+  Später durch echten Code ersetzen
+  */
   try {
-    // Fallback bei leerer Aufgabenliste
-    if (!tasks.length) {
-      return {
-        topTasks: [],
-        motivationalMessage: "Keine Aufgaben gefunden. Füge einige Aufgaben hinzu, um Fokusvorschläge zu erhalten."
-      };
-    }
-
-    // Filtere unerledigte Aufgaben
-    const incompleteTasks = tasks.filter(task => !task.completed);
-    if (!incompleteTasks.length) {
-      return {
-        topTasks: [],
-        motivationalMessage: "Alle Aufgaben erledigt! Großartige Arbeit! Zeit für eine Pause."
-      };
-    }
-
     // Konfiguriere das Gemini-Modell
     const model = genAI.getGenerativeModel({ model: "gemini-1.5-pro" });
     
