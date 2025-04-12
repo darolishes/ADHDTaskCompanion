@@ -6,271 +6,186 @@
   :root {
     --background: 210 25% 98%;
     --foreground: 220 15% 12%;
-
+    
     --card: 0 0% 100%;
     --card-foreground: 220 15% 12%;
-
+    
     --popover: 0 0% 100%;
     --popover-foreground: 220 15% 12%;
-
+    
     --primary: 251 80% 55%;
     --primary-foreground: 0 0% 100%;
-
+    
     --secondary: 170 85% 65%;
     --secondary-foreground: 220 15% 12%;
-
+    
     --muted: 210 25% 96%;
     --muted-foreground: 220 15% 40%;
-
+    
     --accent: 251 80% 96%;
     --accent-foreground: 251 80% 55%;
-
+    
     --destructive: 0 90% 65%;
     --destructive-foreground: 0 0% 100%;
-
+    
     --border: 220 15% 92%;
 
-    @keyframes fadeInScale {
-      from {
-        opacity: 0;
-        transform: scale(0.95);
-      }
+@keyframes fadeInScale {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
 
-      to {
-        opacity: 1;
-        transform: scale(1);
-      }
-    }
-
-    .focus-mode-enter {
-      animation: fadeInScale 0.3s ease-out forwards;
-    }
+.focus-mode-enter {
+  animation: fadeInScale 0.3s ease-out forwards;
+}
 
     --input: 220 15% 92%;
     --ring: 251 80% 55%;
-    --radius: 0.75rem;
-
-    /* Success colors */
-    --success: 142 72% 29%;
-    --success-foreground: 0 0% 100%;
-
-    /* Warning colors */
-    --warning: 38 92% 50%;
-    --warning-foreground: 0 0% 100%;
+    
+    --radius: 0.875rem;
   }
-
+  
   .dark {
     --background: 220 15% 9%;
     --foreground: 210 25% 98%;
-
+    
     --card: 220 15% 13%;
     --card-foreground: 210 25% 98%;
-
+    
     --popover: 220 15% 13%;
     --popover-foreground: 210 25% 98%;
-
+    
     --primary: 251 80% 65%;
     --primary-foreground: 0 0% 100%;
-
+    
     --secondary: 170 85% 35%;
     --secondary-foreground: 0 0% 100%;
-
+    
     --muted: 220 15% 18%;
     --muted-foreground: 210 25% 75%;
-
+    
     --accent: 251 80% 25%;
     --accent-foreground: 251 80% 75%;
-
+    
     --destructive: 0 90% 65%;
     --destructive-foreground: 0 0% 100%;
-
-
-    --border: 220 13% 20%;
-    --input: 220 13% 20%;
-    --ring: 251 76% 60%;
-
-    /* Success colors */
-    --success: 142 72% 35%;
-    --success-foreground: 0 0% 100%;
-
-    /* Warning colors */
-    --warning: 38 92% 45%;
-    --warning-foreground: 0 0% 100%;
+    
+    --border: 220 15% 22%;
+    --input: 220 15% 22%;
+    --ring: 251 80% 65%;
   }
-
+  
   * {
     @apply border-border;
   }
-
+  
   body {
     @apply font-sans antialiased bg-background text-foreground;
   }
-
+  
   /* Improved focus styles for accessibility */
   :focus-visible {
     @apply outline-none ring-2 ring-primary ring-offset-2 ring-offset-background;
   }
-
-  /* Typography scale */
-  h1 {
-    @apply text-2xl font-semibold tracking-tight;
-  }
-
-  h2 {
-    @apply text-xl font-semibold;
-  }
-
-  h3 {
-    @apply text-lg font-medium;
-  }
 }
 
 @layer components {
-
   /* Task item styles */
-  .task-item {
-    @apply relative overflow-hidden p-4 rounded-xl border border-border bg-card shadow-sm transition-all hover:shadow-md hover:border-primary/20;
-  }
-
   .task-item:hover .task-checkbox {
     @apply scale-105;
   }
-
-  .task-checkbox {
-    @apply w-5 h-5 rounded-full border-2 border-muted-foreground/40 flex items-center justify-center transition-all duration-200 hover:border-primary relative overflow-hidden;
+  
+  .task-item .focus-btn {
+    @apply opacity-0 transform translate-y-1;
   }
-
-  .task-checkbox::after {
-    content: '';
-    @apply absolute inset-0 scale-0 bg-primary opacity-0 rounded-full transition-all duration-300;
+  
+  .task-item:hover .focus-btn {
+    @apply opacity-100 translate-y-0;
   }
-
-  .task-checkbox:active::after {
-    @apply scale-100 opacity-20;
+  
+  /* Energy level badges */
+  .energy-badge {
+    @apply flex items-center text-xs px-2 py-0.5 rounded-full;
   }
-
-  /* Category card styles */
-  .category-card {
-    @apply w-[350px] h-[560px] bg-card rounded-xl shadow-md overflow-hidden cursor-pointer transition-all hover:shadow-lg hover:scale-[1.02];
+  
+  .energy-badge-high {
+    @apply bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400;
   }
-
-  .category-card-icon {
-    @apply w-20 h-20 rounded-full bg-primary/10 flex items-center justify-center mb-5;
+  
+  .energy-badge-medium {
+    @apply bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400;
   }
-
-  .category-card-content {
-    @apply p-6 h-full flex flex-col;
+  
+  .energy-badge-low {
+    @apply bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400;
   }
-
-  .category-card-stats {
-    @apply mt-auto mb-8;
-  }
-
-  .category-card-progress {
-    @apply h-2 w-full bg-muted rounded-full overflow-hidden;
-  }
-
-  /* Focus mode styles */
-  .focus-mode-container {
-    @apply relative overflow-hidden;
-  }
-
-  .focus-mode-container::before {
-    content: '';
-    @apply absolute inset-0 bg-gradient-to-b from-background/80 to-background opacity-0 transition-opacity duration-700;
-  }
-
-  .focus-mode-active .focus-mode-container::before {
-    @apply opacity-100;
-  }
-
-  .focus-timer {
-    @apply text-4xl font-mono text-center mb-4;
-  }
-
-  .focus-progress {
-    @apply h-2 bg-muted rounded-full mt-3 overflow-hidden;
-  }
-
-  .focus-step {
-    @apply bg-muted/50 rounded-lg p-4 mb-4;
-  }
-
+  
   /* Form styles */
-  .form-input {
-    @apply h-10 w-full rounded-lg border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50;
+  .form-input-wrapper {
+    @apply relative transition-all duration-200;
   }
-
-  .form-label {
-    @apply text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70;
+  
+  .form-input-wrapper:focus-within {
+    @apply ring-2 ring-primary/20 rounded-lg;
   }
-
-  /* Button variants */
-  .btn-primary {
-    @apply bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2 rounded-lg inline-flex items-center justify-center font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50;
+  
+  /* Page transitions */
+  .page-transition-enter {
+    @apply opacity-0 transform translate-y-4;
   }
-
-  .btn-secondary {
-    @apply bg-secondary text-secondary-foreground hover:bg-secondary/80;
+  
+  .page-transition-enter-active {
+    @apply opacity-100 transform translate-y-0 transition-all duration-300 ease-out;
   }
-
-  .btn-outline {
-    @apply border border-input bg-background hover:bg-accent hover:text-accent-foreground;
+  
+  .page-transition-exit {
+    @apply opacity-100 transform translate-y-0;
   }
-
-  /* Animation classes */
-  .animate-slide-up {
-    animation: slideUp 0.3s ease forwards;
-  }
-
-  .animate-fade-in {
-    animation: fadeIn 0.3s ease forwards;
+  
+  .page-transition-exit-active {
+    @apply opacity-0 transform -translate-y-4 transition-all duration-200 ease-in;
   }
 }
 
-/* Animation keyframes */
-@keyframes slideUp {
-  0% {
-    transform: translateY(20px);
-    opacity: 0;
-  }
-
-  100% {
-    transform: translateY(0);
-    opacity: 1;
-  }
-}
-
+/* Animation definitions */
 @keyframes fadeIn {
-  0% {
-    opacity: 0;
-  }
-
-  100% {
-    opacity: 1;
-  }
+  0% { opacity: 0; }
+  100% { opacity: 1; }
 }
 
-@keyframes pulse {
+@keyframes slideUp {
+  0% { transform: translateY(20px); opacity: 0; }
+  100% { transform: translateY(0); opacity: 1; }
+}
 
-  0%,
-  100% {
-    opacity: 1;
-  }
+@keyframes slideInRight {
+  0% { transform: translateX(20px); opacity: 0; }
+  100% { transform: translateX(0); opacity: 1; }
+}
 
-  50% {
-    opacity: 0.7;
-  }
+@keyframes slideInLeft {
+  0% { transform: translateX(-20px); opacity: 0; }
+  100% { transform: translateX(0); opacity: 1; }
+}
+
+@keyframes pulseLight {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.7; }
 }
 
 @keyframes task-enter {
-  from {
-    transform: translateY(15px) scale(0.98);
+  from { 
+    transform: translateY(15px) scale(0.98); 
     opacity: 0;
   }
-
-  to {
-    transform: translateY(0) scale(1);
+  to { 
+    transform: translateY(0) scale(1); 
     opacity: 1;
   }
 }
@@ -300,54 +215,68 @@
 }
 
 @keyframes scale-in {
-  from {
-    transform: scale(0.95);
-    opacity: 0;
-  }
-
-  to {
-    transform: scale(1);
-    opacity: 1;
-  }
+  from { transform: scale(0.95); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
 }
 
 @keyframes confetti {
-  0% {
-    transform: translateY(0) rotate(0deg);
+  0% { 
+    transform: translateY(0) rotate(0deg); 
     opacity: 1;
   }
-
-  100% {
-    transform: translateY(-100px) rotate(720deg);
+  100% { 
+    transform: translateY(-100px) rotate(720deg); 
     opacity: 0;
   }
 }
 
 @keyframes bounce-subtle {
-
-  0%,
-  100% {
-    transform: translateY(0);
-  }
-
-  50% {
-    transform: translateY(-5px);
-  }
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-5px); }
 }
 
-/* Utility classes */
-.text-success {
-  color: hsl(var(--success));
+/* Set energy selector style */
+.energy-option input:checked + label {
+  @apply border-primary bg-primary/10 text-primary font-medium;
 }
 
-.text-warning {
-  color: hsl(var(--warning));
+.energy-option label {
+  @apply transition-all duration-200;
 }
 
-.bg-success {
-  background-color: hsl(var(--success));
+.energy-option input:focus + label {
+  @apply ring-2 ring-primary/50 ring-offset-1;
 }
 
-.bg-warning {
-  background-color: hsl(var(--warning));
+/* Timer progress */
+.timer-progress {
+  transition: width 1s linear;
+}
+
+/* Improved checkbox style */
+.task-checkbox {
+  @apply transition-all duration-200 relative overflow-hidden;
+}
+
+.task-checkbox::after {
+  content: '';
+  @apply absolute inset-0 scale-0 bg-primary opacity-0 rounded-full transition-all duration-300;
+}
+
+.task-checkbox:active::after {
+  @apply scale-100 opacity-20;
+}
+
+/* Improved focus mode */
+.focus-mode-container {
+  @apply relative overflow-hidden;
+}
+
+.focus-mode-container::before {
+  content: '';
+  @apply absolute inset-0 bg-gradient-to-b from-background/80 to-background opacity-0 transition-opacity duration-700;
+}
+
+.focus-mode-active .focus-mode-container::before {
+  @apply opacity-100;
 }
