@@ -7,7 +7,7 @@ import {
   getDailyFocusSuggestions,
   predictTaskEmoji,
   analyzeNaturalLanguageTask,
-} from "./gemini";
+} from "@focus-flow/ai-helpers";
 import {
   insertTaskSchema,
   insertTaskStepSchema,
@@ -16,7 +16,7 @@ import {
   EnergyLevel,
   PriorityLevel,
   CategoryType,
-} from "@focus-flow/shared";
+} from "@focus-flow/schema";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // GET all tasks
