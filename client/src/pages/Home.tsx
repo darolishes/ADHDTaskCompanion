@@ -155,12 +155,8 @@ export default function Home() {
               {isFocusMode ? 'Fokussiert' : selectedCategory === 'personal' ? 'Persönliche Aufgaben' : 'Arbeitsaufgaben'}
             </h1>
           ) : (
-            // Datum und Aufgabenzähler auf der Startseite
-            <div className={`transition-all duration-500 ${animateIn ? 'opacity-100' : 'opacity-0'}`}>
-              <h1 className="text-xl font-medium">{formatDate(new Date())}</h1>
-              <p className="text-sm">
-                Hi, Steve! Du hast {uncompletedTasks.length} {uncompletedTasks.length === 1 ? 'Aufgabe' : 'Aufgaben'} heute.
-              </p>
+            <div className="flex-1">
+              {/* Leer - wird unten platziert */}
             </div>
           )}
           
@@ -172,52 +168,12 @@ export default function Home() {
               </svg>
             </button>
           ) : (
-            // Suche und Avater auf der Startseite
-            <div className="flex items-center gap-2">
-              <button className="w-8 h-8 flex items-center justify-center">
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                </svg>
-              </button>
-              
-              <button 
-                onClick={() => setUserMenuOpen(!userMenuOpen)}
-                className="relative w-9 h-9 rounded-full overflow-hidden border-2 border-white shadow-sm"
-              >
-                <img 
-                  src="https://i.pravatar.cc/300?img=9" 
-                  alt="User avatar" 
-                  className="w-full h-full object-cover"
-                />
-                
-                {userMenuOpen && (
-                  <div className="absolute right-0 mt-2 w-48 bg-card border border-border rounded-lg shadow-lg z-30">
-                    <div className="p-2">
-                      <button 
-                        onClick={() => setUserMenuOpen(false)}
-                        className="w-full text-left px-3 py-2 text-sm rounded-md hover:bg-muted transition-colors"
-                      >
-                        Mein Profil
-                      </button>
-                      <button 
-                        onClick={() => setUserMenuOpen(false)}
-                        className="w-full text-left px-3 py-2 text-sm rounded-md hover:bg-muted transition-colors"
-                      >
-                        Einstellungen
-                      </button>
-                      <ThemeToggle />
-                      <div className="border-t border-border my-1"></div>
-                      <button 
-                        onClick={() => setUserMenuOpen(false)}
-                        className="w-full text-left px-3 py-2 text-sm rounded-md hover:bg-muted text-red-500 transition-colors"
-                      >
-                        Ausloggen
-                      </button>
-                    </div>
-                  </div>
-                )}
-              </button>
-            </div>
+            // Nur Suche auf der Startseite (kein Avatar)
+            <button className="w-8 h-8 flex items-center justify-center">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+              </svg>
+            </button>
           )}
         </div>
       </header>
@@ -301,24 +257,35 @@ export default function Home() {
           <div className="max-w-md mx-auto px-4 pb-24">
             {/* Benutzerprofil und Begrüßung auf der Homepage */}
             <div className={`mb-10 mt-4 transition-all duration-500 ${animateIn ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
-              <div className="flex items-center justify-center mb-8">
-                <div className="w-20 h-20 rounded-full overflow-hidden border-2 border-white shadow-sm">
-                  <img 
-                    src="https://i.pravatar.cc/300?img=9" 
-                    alt="User avatar" 
-                    className="w-full h-full object-cover"
-                  />
+              <div className="mb-4">
+                <div className="flex justify-start mb-3">
+                  <div className="w-16 h-16 rounded-full overflow-hidden border-2 border-white shadow-sm">
+                    <img 
+                      src="https://i.pravatar.cc/300?img=9" 
+                      alt="User avatar" 
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                </div>
+                <div className="pl-1">
+                  <h1 className="text-xl font-medium">{formatDate(new Date())}</h1>
+                  <p className="text-sm">
+                    Hi, Steve! Du hast {uncompletedTasks.length} {uncompletedTasks.length === 1 ? 'Aufgabe' : 'Aufgaben'} heute.
+                  </p>
                 </div>
               </div>
             </div>
 
-            {/* Kategorie-Cards im Hochformat */}
-            <div className={`transition-all duration-500 ${animateIn ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
-              <div className="flex justify-center">
-                <div className="w-[85%] max-w-[300px]">
-                  {/* Aktive Karte in der Mitte */}
+            {/* Leerer Bereich für Mittelteil */}
+            <div className="flex-grow"></div>
+            
+            {/* Kategorie-Cards im Hochformat als horizontaler Slider am unteren Rand */}
+            <div className={`fixed bottom-8 left-0 right-0 px-4 transition-all duration-500 ${animateIn ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
+              <div className="overflow-x-auto">
+                <div className="flex gap-4 pb-4 px-2">
+                  {/* Personal-Karte */}
                   <div 
-                    className="bg-white rounded-xl shadow-md mb-4 overflow-hidden cursor-pointer"
+                    className="flex-shrink-0 w-[200px] bg-white rounded-xl shadow-md overflow-hidden cursor-pointer"
                     onClick={() => handleSelectCategory('personal')}
                   >
                     <div className="p-5">
@@ -335,7 +302,7 @@ export default function Home() {
                         </span>
                       </div>
                       
-                      <div className="mt-20 mb-4">
+                      <div className="mt-8 mb-4">
                         <p className="text-sm font-medium text-gray-500">{uncompletedTasks.length} {uncompletedTasks.length === 1 ? 'task' : 'tasks'}</p>
                         <h2 className="text-2xl font-bold">Personal</h2>
                       </div>
@@ -350,9 +317,9 @@ export default function Home() {
                     </div>
                   </div>
                   
-                  {/* Weitere Karten (teilweise sichtbar am Ende) */}
+                  {/* Work-Karte */}
                   <div 
-                    className="bg-white rounded-xl shadow-md opacity-90 scale-95 -mt-2 cursor-pointer"
+                    className="flex-shrink-0 w-[200px] bg-white rounded-xl shadow-md overflow-hidden cursor-pointer"
                     onClick={() => handleSelectCategory('work')}
                   >
                     <div className="p-5">
@@ -363,16 +330,52 @@ export default function Home() {
                             <path d="M2 13.692V16a2 2 0 002 2h12a2 2 0 002-2v-2.308A24.974 24.974 0 0110 15c-2.796 0-5.487-.46-8-1.308z" />
                           </svg>
                         </div>
+                        <span className="w-7 h-7 flex items-center justify-center text-gray-400">
+                          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z" />
+                          </svg>
+                        </span>
                       </div>
                       
-                      <div className="mt-12 mb-4">
+                      <div className="mt-8 mb-4">
                         <p className="text-sm font-medium text-gray-500">0 tasks</p>
-                        <h2 className="text-xl font-bold">Work</h2>
+                        <h2 className="text-2xl font-bold">Work</h2>
                       </div>
                       
                       {/* Progress bar */}
                       <div className="h-1 w-full bg-gray-200 rounded-full overflow-hidden">
                         <div className="h-full bg-blue-500 rounded-full" style={{ width: '0%' }} />
+                      </div>
+                    </div>
+                  </div>
+                  
+                  {/* Family-Karte */}
+                  <div 
+                    className="flex-shrink-0 w-[200px] bg-white rounded-xl shadow-md overflow-hidden cursor-pointer"
+                    onClick={() => handleSelectCategory('family')}
+                  >
+                    <div className="p-5">
+                      <div className="flex justify-between items-start mb-4">
+                        <div className="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center">
+                          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-green-500" viewBox="0 0 20 20" fill="currentColor">
+                            <path d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3zM6 8a2 2 0 11-4 0 2 2 0 014 0zM16 18v-3a5.972 5.972 0 00-.75-2.906A3.005 3.005 0 0119 15v3h-3zM4.75 12.094A5.973 5.973 0 004 15v3H1v-3a3 3 0 013.75-2.906z" />
+                          </svg>
+                        </div>
+                        <span className="w-7 h-7 flex items-center justify-center text-gray-400">
+                          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z" />
+                          </svg>
+                        </span>
+                      </div>
+                      
+                      <div className="mt-8 mb-4">
+                        <p className="text-sm font-medium text-gray-500">0 tasks</p>
+                        <h2 className="text-2xl font-bold">Family</h2>
+                      </div>
+                      
+                      {/* Progress bar */}
+                      <div className="h-1 w-full bg-gray-200 rounded-full overflow-hidden">
+                        <div className="h-full bg-green-500 rounded-full" style={{ width: '0%' }} />
                       </div>
                     </div>
                   </div>
