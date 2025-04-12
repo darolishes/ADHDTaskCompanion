@@ -65,8 +65,13 @@ export function TaskAddForm({ onAddSuccess }: TaskAddFormProps) {
       // Automatisch Energielevel aus dem Titel ableiten
       const detectedEnergy = determineEnergyFromTitle(title);
       
+      // Wenn ein Emoji ausgewählt wurde, füge es dem Titel hinzu
+      const finalTitle = selectedEmoji 
+        ? `${selectedEmoji} ${title.trim()}` 
+        : title.trim();
+      
       const taskData: CreateTaskInput = {
-        title: title.trim(),
+        title: finalTitle,
         energyLevel: detectedEnergy,
       };
       
@@ -177,6 +182,26 @@ export function TaskAddForm({ onAddSuccess }: TaskAddFormProps) {
       {isListening && (
         <div className="text-center mt-2 text-xs text-muted-foreground animate-pulse">
           Ich höre zu... Sprich jetzt
+        </div>
+      )}
+      
+      {/* Emoji-Selector anzeigen, wenn der Titel lang genug ist */}
+      {title.trim().length >= 3 && (
+        <div className="mt-3 mb-1">
+          <p className="text-xs text-muted-foreground mb-1">
+            Wähle ein Emoji für deine Aufgabe:
+          </p>
+          <EmojiSelector 
+            taskTitle={title}
+            onSelect={(emoji) => setSelectedEmoji(emoji)}
+            className="mt-1 mb-1"
+          />
+          {selectedEmoji && (
+            <div className="flex items-center mt-1">
+              <span className="text-xs text-muted-foreground mr-2">Ausgewähltes Emoji:</span>
+              <span className="text-lg">{selectedEmoji}</span>
+            </div>
+          )}
         </div>
       )}
     </div>
