@@ -73,16 +73,7 @@ export function DailyFocusSuggestion({ currentEnergyLevel, onFocusTask }: DailyF
   }
 
   if (!data || data.topTasks.length === 0) {
-    return (
-      <Card className="w-full mb-6 bg-muted/50">
-        <CardHeader className="pb-2">
-          <CardTitle className="text-xl">Keine Fokusvorschläge verfügbar</CardTitle>
-          <CardDescription>
-            {data?.motivationalMessage || 'Füge einige Aufgaben hinzu, um Fokusvorschläge zu erhalten.'}
-          </CardDescription>
-        </CardHeader>
-      </Card>
-    );
+    return null;
   }
 
   return (
