@@ -20,7 +20,7 @@ export async function analyzeAndBreakdownTask(
 ): Promise<TaskBreakdownResponse> {
   try {
     // Erhalte das Gemini-Modell
-    const model = genAI.getGenerativeModel({ model: "gemini-pro" });
+    const model = genAI.getGenerativeModel({ model: "gemini-1.5-pro" });
     
     // Konfiguriere die Sicherheitseinstellungen
     const generationConfig = {
