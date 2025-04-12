@@ -2,7 +2,7 @@ import type { Express, Request, Response } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { z } from "zod";
-import { analyzeAndBreakdownTask } from "./gemini";
+import { analyzeAndBreakdownTask, getDailyFocusSuggestions } from "./gemini";
 import {
   insertTaskSchema,
   insertTaskStepSchema,
@@ -384,6 +384,40 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error("Error ending productivity session:", error);
       return res.status(500).json({ message: "Failed to end productivity session" });
+    }
+  });
+
+  // Get daily focus suggestions
+  app.get("/api/focus/daily", async (req: Request, res: Response) => {
+    try {
+      const energyLevelParam = req.query.energyLevel as EnergyLevel | undefined;
+      // Standardmäßig nehmen wir mittlere Energie an, wenn nichts angegeben ist
+      const energyLevel = energyLevelParam || EnergyLevel.MEDIUM;
+
+      // Hole alle Aufgaben
+      const tasks = await storage.getTasks();
+      
+      // Hole KI-Vorschläge für täglichen Fokus
+      const focusSuggestions = await getDailyFocusSuggestions(tasks, energyLevel);
+      
+      // Ergänze die vollständigen Aufgabeninformationen
+      const enrichedSuggestions = {
+        ...focusSuggestions,
+        topTasks: await Promise.all(
+          focusSuggestions.topTasks.map(async (suggestion) => {
+            const task = await storage.getTaskWithSteps(suggestion.taskId);
+            return {
+              ...suggestion,
+              task: task || null
+            };
+          })
+        )
+      };
+      
+      res.status(200).json(enrichedSuggestions);
+    } catch (error) {
+      console.error("Error getting daily focus suggestions:", error);
+      res.status(500).json({ error: "Failed to get focus suggestions" });
     }
   });
 
