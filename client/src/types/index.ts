@@ -52,13 +52,3 @@ export interface ModalState {
   stepCompleted: boolean;
   taskCompleted: boolean;
 }
-
-export interface NLPTaskAnalysis {
-  title: string;
-  description: string | null;
-  priority: "high" | "medium" | "low";
-  energyLevel: "high" | "medium" | "low" | null;
-  dueDate: string | null;
-  category: "personal" | "work" | "family" | "health";
-  estimatedDuration: number | null;
-}

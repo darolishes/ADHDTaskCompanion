@@ -3,7 +3,7 @@ import { useSpeechRecognition } from '@/hooks/use-speech-recognition';
 import { apiRequest } from '@/lib/queryClient';
 import { useToast } from '@/hooks/use-toast';
 import { useQueryClient } from '@tanstack/react-query';
-import { CreateTaskInput, NLPTaskAnalysis } from '@/types';
+import { CreateTaskInput } from '@/types';
 import { EmojiSelector } from './emoji-selector';
 
 interface TaskAddFormProps {
@@ -16,13 +16,6 @@ export function TaskAddForm({ onAddSuccess }: TaskAddFormProps) {
   const [category, setCategory] = useState<"personal" | "work" | "family" | "health">("personal");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [selectedEmoji, setSelectedEmoji] = useState<string>('');
-  const [isAnalyzing, setIsAnalyzing] = useState(false);
-  const [nlpAnalysis, setNlpAnalysis] = useState<NLPTaskAnalysis | null>(null);
-  const [description, setDescription] = useState<string | null>(null);
-  const [priority, setPriority] = useState<"high" | "medium" | "low" | null>(null);
-  const [dueDate, setDueDate] = useState<string | null>(null);
-  const [estimatedDuration, setEstimatedDuration] = useState<number | null>(null);
-  const [showAdvancedOptions, setShowAdvancedOptions] = useState(false);
   
   const { toast } = useToast();
   const queryClient = useQueryClient();
@@ -42,62 +35,6 @@ export function TaskAddForm({ onAddSuccess }: TaskAddFormProps) {
       setTitle(transcript);
     }
   }, [transcript]);
-  
-  // Effekt zum Zurücksetzen der NLP-Analyse, wenn sich der Titel ändert
-  useEffect(() => {
-    if (nlpAnalysis && title !== nlpAnalysis.title) {
-      setNlpAnalysis(null);
-    }
-  }, [title, nlpAnalysis]);
-  
-  const analyzeTaskWithNLP = async () => {
-    if (!title.trim() || title.length < 5) {
-      toast({
-        title: "Zu kurze Beschreibung",
-        description: "Bitte gib eine ausführlichere Beschreibung für die Analyse ein.",
-        variant: "destructive",
-      });
-      return;
-    }
-    
-    try {
-      setIsAnalyzing(true);
-      
-      const response = await apiRequest<NLPTaskAnalysis>(
-        'POST', 
-        '/api/tasks/analyze-nlp', 
-        { input: title.trim() }
-      );
-      
-      if (response) {
-        setNlpAnalysis(response);
-        
-        // Formularfelder mit Analyseergebnissen aktualisieren
-        setTitle(response.title || title);
-        setDescription(response.description);
-        setPriority(response.priority);
-        setDueDate(response.dueDate);
-        setEstimatedDuration(response.estimatedDuration);
-        setCategory(response.category || "personal");
-        setEnergyLevel(response.energyLevel || "medium");
-        setShowAdvancedOptions(true);
-        
-        toast({
-          title: "Analyse abgeschlossen",
-          description: "Deine Aufgabe wurde erfolgreich analysiert. Ergebnisse wurden im Formular eingetragen.",
-        });
-      }
-    } catch (error) {
-      console.error('Fehler bei der NLP-Analyse:', error);
-      toast({
-        title: "Fehler bei der Analyse",
-        description: "Die Aufgabe konnte nicht analysiert werden. Bitte versuche es erneut.",
-        variant: "destructive",
-      });
-    } finally {
-      setIsAnalyzing(false);
-    }
-  };
   
   const determineEnergyFromTitle = (title: string): "high" | "medium" | "low" => {
     const lowEnergyTerms = ['entspannen', 'ausruhen', 'pause', 'leicht', 'einfach', 'ruhig'];
@@ -126,36 +63,24 @@ export function TaskAddForm({ onAddSuccess }: TaskAddFormProps) {
     try {
       setIsSubmitting(true);
       
+      // Automatisch Energielevel aus dem Titel ableiten
+      const detectedEnergy = determineEnergyFromTitle(title);
+      
       // Wenn ein Emoji ausgewählt wurde, füge es dem Titel hinzu
       const finalTitle = selectedEmoji 
         ? `${selectedEmoji} ${title.trim()}` 
         : title.trim();
       
-      // Erstelle die Aufgabendaten mit allen verfügbaren Informationen aus der NLP-Analyse
       const taskData: CreateTaskInput = {
         title: finalTitle,
-        // Verwende die NLP-Analyse oder Fallback-Werte
-        energyLevel: energyLevel,
-        description: description || undefined,
-        priority: priority || undefined,
-        dueDate: dueDate || undefined,
-        category: category,
-        estimatedDuration: estimatedDuration || undefined
+        energyLevel: detectedEnergy,
       };
       
       await apiRequest('POST', '/api/tasks', taskData);
       
       // Formular leeren
       setTitle('');
-      setDescription(null);
-      setPriority(null);
-      setDueDate(null);
-      setEstimatedDuration(null);
-      setCategory("personal");
-      setEnergyLevel("medium");
       resetTranscript();
-      setNlpAnalysis(null);
-      setShowAdvancedOptions(false);
       
       // Erfolgsmeldung anzeigen
       toast({
@@ -293,114 +218,6 @@ export function TaskAddForm({ onAddSuccess }: TaskAddFormProps) {
           </button>
         </div>
       </div>
-      
-      {/* NLP-Analyse Button */}
-      {title.trim().length >= 5 && !isAnalyzing && !nlpAnalysis && (
-        <div className="mt-3">
-          <button
-            type="button"
-            onClick={analyzeTaskWithNLP}
-            className="w-full py-2 bg-muted hover:bg-muted/80 transition-colors text-sm rounded-lg flex items-center justify-center gap-2"
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <circle cx="12" cy="12" r="10"></circle>
-              <path d="M12 16v-4"></path>
-              <path d="M12 8h.01"></path>
-            </svg>
-            Mit KI analysieren
-          </button>
-        </div>
-      )}
-      
-      {/* Loading-Indikator während der Analyse */}
-      {isAnalyzing && (
-        <div className="mt-3 flex items-center justify-center">
-          <svg className="animate-spin h-5 w-5 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-          </svg>
-          <span className="text-sm">Analysiere Aufgabe mit KI...</span>
-        </div>
-      )}
-      
-      {/* Erweiterte Optionen nach der Analyse */}
-      {showAdvancedOptions && (
-        <div className="mt-3 p-3 bg-card rounded-lg border border-border">
-          <div className="flex justify-between items-center mb-2">
-            <h3 className="text-sm font-medium">Erweiterte Optionen</h3>
-            <button
-              type="button"
-              onClick={() => setShowAdvancedOptions(false)}
-              className="text-muted-foreground hover:text-foreground"
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M18 6L6 18"></path>
-                <path d="M6 6l12 12"></path>
-              </svg>
-            </button>
-          </div>
-          
-          {/* Beschreibung */}
-          {description && (
-            <div className="mb-3">
-              <label className="text-xs text-muted-foreground">Beschreibung:</label>
-              <div className="mt-1 text-sm bg-background/50 p-2 rounded border border-input">
-                {description}
-              </div>
-            </div>
-          )}
-          
-          {/* Priorität */}
-          {priority && (
-            <div className="mb-3">
-              <label className="text-xs text-muted-foreground">Priorität:</label>
-              <div className="mt-1 flex gap-2">
-                <button
-                  type="button"
-                  onClick={() => setPriority("low")}
-                  className={`px-3 py-1 rounded-full text-xs ${priority === "low" ? "bg-green-500 text-white" : "bg-muted"}`}
-                >
-                  Niedrig
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setPriority("medium")}
-                  className={`px-3 py-1 rounded-full text-xs ${priority === "medium" ? "bg-yellow-500 text-white" : "bg-muted"}`}
-                >
-                  Mittel
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setPriority("high")}
-                  className={`px-3 py-1 rounded-full text-xs ${priority === "high" ? "bg-red-500 text-white" : "bg-muted"}`}
-                >
-                  Hoch
-                </button>
-              </div>
-            </div>
-          )}
-          
-          {/* Fälligkeitsdatum */}
-          {dueDate && (
-            <div className="mb-3">
-              <label className="text-xs text-muted-foreground">Fällig am:</label>
-              <div className="mt-1 text-sm font-medium">
-                {new Date(dueDate).toLocaleDateString('de-DE', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
-              </div>
-            </div>
-          )}
-          
-          {/* Geschätzte Dauer */}
-          {estimatedDuration && (
-            <div className="mb-3">
-              <label className="text-xs text-muted-foreground">Geschätzte Dauer:</label>
-              <div className="mt-1 text-sm font-medium">
-                {estimatedDuration} Minuten
-              </div>
-            </div>
-          )}
-        </div>
-      )}
       
       {isListening && (
         <div className="text-center mt-2 text-xs text-muted-foreground animate-pulse">
