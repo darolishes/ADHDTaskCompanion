@@ -13,44 +13,44 @@ interface TaskItemProps {
 export function TaskItem({ task, onFocus, onComplete }: TaskItemProps) {
   const [isCompleting, setIsCompleting] = useState(false);
   const [showDetails, setShowDetails] = useState(false);
-  
+
   // Fetch task with steps when opening details dialog
   const { data: taskWithSteps } = useQuery<TaskWithSteps>({
     queryKey: ['/api/tasks', task.id],
     enabled: showDetails,
   });
-  
+
   const handleComplete = (e: React.MouseEvent) => {
     e.stopPropagation(); // Prevent dialog from opening
     setIsCompleting(true);
-    
+
     // Visual feedback before completing
     setTimeout(() => {
       onComplete(task.id);
       setIsCompleting(false);
     }, 300);
   };
-  
+
   const handleFocus = (e: React.MouseEvent) => {
     e.stopPropagation();
     onFocus(task.id);
   };
-  
+
   // Priorität als Farbe darstellen
   const priorityColor = {
     high: "bg-red-500",
     medium: "bg-amber-500",
     low: "bg-green-500"
   };
-  
+
   return (
     <>
       <div 
         onClick={() => setShowDetails(true)}
         className="relative group cursor-pointer"
       >
-        <div className="task-item relative overflow-hidden p-3 rounded-xl border border-border bg-card shadow-sm transition-all duration-300 hover:shadow-md hover:border-primary/20">
-          <div className="flex items-center gap-3">
+        <div className="task-item relative overflow-hidden p-4 rounded-lg border border-border bg-card shadow-sm transition-all duration-300 hover:shadow-md hover:border-primary/20 group hover:bg-accent/5 transition-colors">
+          <div className="flex items-center gap-4">
             <button 
               onClick={handleComplete}
               className={`task-checkbox w-5 h-5 rounded-full flex items-center justify-center transition-colors ${
@@ -66,7 +66,7 @@ export function TaskItem({ task, onFocus, onComplete }: TaskItemProps) {
                 </svg>
               )}
             </button>
-            
+
             <div className="flex-1 min-w-0">
               <div className="flex items-center gap-1.5 mb-0.5">
                 {/* Farbiger Prioritätsindikator */}
@@ -74,10 +74,10 @@ export function TaskItem({ task, onFocus, onComplete }: TaskItemProps) {
                   className={`w-2 h-2 rounded-full flex-shrink-0 ${priorityColor[task.priority as keyof typeof priorityColor]}`} 
                   aria-hidden="true"
                 />
-                
+
                 <h3 className="font-medium text-sm truncate pr-1">{task.title}</h3>
               </div>
-              
+
               <div className="flex items-center text-xs text-muted-foreground mt-0.5">
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3 mr-1 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -85,7 +85,7 @@ export function TaskItem({ task, onFocus, onComplete }: TaskItemProps) {
                 <span className="truncate">{formatTime(task.estimatedDuration || 0)}</span>
               </div>
             </div>
-            
+
             <button 
               onClick={handleFocus}
               className="focus-btn p-1.5 rounded-full text-muted-foreground hover:text-primary hover:bg-muted transition-colors"
@@ -99,7 +99,7 @@ export function TaskItem({ task, onFocus, onComplete }: TaskItemProps) {
           </div>
         </div>
       </div>
-      
+
       {/* Aufgabendetails Dialog */}
       <TaskDetailDialog 
         task={taskWithSteps || null}

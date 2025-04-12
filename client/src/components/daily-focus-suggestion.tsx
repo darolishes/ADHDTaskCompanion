@@ -73,7 +73,28 @@ export function DailyFocusSuggestion({ currentEnergyLevel, onFocusTask }: DailyF
   }
 
   if (!data || data.topTasks.length === 0) {
-    return null;
+    return (
+      <Card className="w-full mb-6 bg-accent/10 border-dashed">
+        <CardHeader className="pb-2 text-center">
+          <CardTitle className="text-xl flex items-center justify-center gap-2">
+            <span className="text-2xl">✨</span>
+            Zeit für neue Abenteuer
+          </CardTitle>
+          <CardDescription className="text-center">
+            "Der beste Weg, die Zukunft vorherzusagen, ist sie zu gestalten."
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="text-center pb-4">
+          <Button
+            variant="outline" 
+            size="sm"
+            onClick={() => window.location.hash = '#add-task'}
+          >
+            Neue Aufgabe erstellen
+          </Button>
+        </CardContent>
+      </Card>
+    );
   }
 
   return (
