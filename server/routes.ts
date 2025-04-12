@@ -78,7 +78,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       
       const { title, energyLevel } = validationResult.data;
 
-      // Use OpenAI to analyze and breakdown the task
+      // Use Google Gemini to analyze and breakdown the task
       const taskAnalysis = await analyzeAndBreakdownTask(title, energyLevel);
       
       // Create the main task
@@ -142,8 +142,47 @@ export async function registerRoutes(app: Express): Promise<Server> {
         });
       }
 
+      // Typkonvertierung für das Update mit explizitem Cast
+      const partialTask: Partial<{
+        title: string;
+        description: string | null;
+        priority: PriorityLevel;
+        energyLevel: EnergyLevel | null;
+        estimatedDuration: number | null;
+        completed: boolean;
+        userId: number | null;
+        dueDate: Date | null;
+      }> = {};
+
+      // Kopieren Sie die Daten aus validationResult.data in partialTask mit Typüberprüfung
+      if ('title' in validationResult.data) partialTask.title = validationResult.data.title;
+      if ('description' in validationResult.data) partialTask.description = validationResult.data.description;
+      if ('estimatedDuration' in validationResult.data) partialTask.estimatedDuration = validationResult.data.estimatedDuration;
+      if ('completed' in validationResult.data) partialTask.completed = validationResult.data.completed;
+      if ('userId' in validationResult.data) partialTask.userId = validationResult.data.userId;
+      if ('dueDate' in validationResult.data) partialTask.dueDate = validationResult.data.dueDate;
+      
+      // Spezielle Behandlung für die enum-Werte
+      if ('priority' in validationResult.data && validationResult.data.priority) {
+        const priority = validationResult.data.priority.toLowerCase();
+        if (Object.values(PriorityLevel).includes(priority as PriorityLevel)) {
+          partialTask.priority = priority as PriorityLevel;
+        } else {
+          return res.status(400).json({ message: "Invalid priority level" });
+        }
+      }
+      
+      if ('energyLevel' in validationResult.data && validationResult.data.energyLevel) {
+        const energyLevel = validationResult.data.energyLevel.toLowerCase();
+        if (Object.values(EnergyLevel).includes(energyLevel as EnergyLevel)) {
+          partialTask.energyLevel = energyLevel as EnergyLevel;
+        } else {
+          return res.status(400).json({ message: "Invalid energy level" });
+        }
+      }
+
       // Update the task
-      const updatedTask = await storage.updateTask(taskId, validationResult.data);
+      const updatedTask = await storage.updateTask(taskId, partialTask);
       return res.json(updatedTask);
     } catch (error) {
       console.error("Error updating task:", error);
