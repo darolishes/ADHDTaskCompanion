@@ -27,6 +27,11 @@ export interface TaskWithSteps extends Task {
 export type CreateTaskInput = {
   title: string;
   energyLevel: "high" | "medium" | "low";
+  description?: string;
+  priority?: "high" | "medium" | "low";
+  estimatedDuration?: number;
+  dueDate?: string | Date | null;
+  category?: "personal" | "work" | "family" | "health";
 };
 
 export interface WeekDay {
