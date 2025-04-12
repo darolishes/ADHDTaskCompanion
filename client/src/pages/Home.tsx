@@ -9,6 +9,8 @@ import { apiRequest } from '@/lib/queryClient';
 import { useToast } from '@/hooks/use-toast';
 import { Button } from '@/components/ui/button';
 import { useLocation } from 'wouter';
+import { DailyFocusSuggestion } from '@/components/daily-focus-suggestion';
+import { EnergyLevel } from '@shared/schema';
 
 export default function Home() {
   const [focusTaskId, setFocusTaskId] = useState<number | null>(null);
@@ -16,6 +18,7 @@ export default function Home() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
   const [animateIn, setAnimateIn] = useState(false);
+  const [currentEnergyLevel, setCurrentEnergyLevel] = useState<EnergyLevel>(EnergyLevel.MEDIUM);
   const [location, setLocation] = useLocation();
   const queryClient = useQueryClient();
   const { toast } = useToast();
@@ -256,7 +259,7 @@ export default function Home() {
           // Homescreen mit Kategoriekarten im Hochformat
           <div className="max-w-md mx-auto px-4 pb-24">
             {/* Benutzerprofil und Begrüßung auf der Homepage */}
-            <div className={`mb-10 mt-4 transition-all duration-500 ${animateIn ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
+            <div className={`mb-6 mt-4 transition-all duration-500 ${animateIn ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
               <div className="mb-4">
                 <div className="flex justify-start mb-3">
                   <div className="w-16 h-16 rounded-full overflow-hidden border-2 border-white shadow-sm">
@@ -274,7 +277,47 @@ export default function Home() {
                   </p>
                 </div>
               </div>
+              
+              {/* Energie-Level-Auswahl */}
+              <div className="flex gap-2 pl-1 mb-4">
+                <button 
+                  onClick={() => setCurrentEnergyLevel(EnergyLevel.LOW)}
+                  className={`px-3 py-1.5 text-xs rounded-full transition-colors ${
+                    currentEnergyLevel === EnergyLevel.LOW 
+                      ? 'bg-red-100 text-red-700 border border-red-300' 
+                      : 'bg-muted/40 text-muted-foreground border border-transparent'
+                  }`}
+                >
+                  Niedrige Energie
+                </button>
+                <button 
+                  onClick={() => setCurrentEnergyLevel(EnergyLevel.MEDIUM)}
+                  className={`px-3 py-1.5 text-xs rounded-full transition-colors ${
+                    currentEnergyLevel === EnergyLevel.MEDIUM 
+                      ? 'bg-amber-100 text-amber-700 border border-amber-300' 
+                      : 'bg-muted/40 text-muted-foreground border border-transparent'
+                  }`}
+                >
+                  Mittlere Energie
+                </button>
+                <button 
+                  onClick={() => setCurrentEnergyLevel(EnergyLevel.HIGH)}
+                  className={`px-3 py-1.5 text-xs rounded-full transition-colors ${
+                    currentEnergyLevel === EnergyLevel.HIGH 
+                      ? 'bg-green-100 text-green-700 border border-green-300' 
+                      : 'bg-muted/40 text-muted-foreground border border-transparent'
+                  }`}
+                >
+                  Hohe Energie
+                </button>
+              </div>
             </div>
+            
+            {/* Tägliche Fokusvorschläge basierend auf Energielevel */}
+            <DailyFocusSuggestion
+              currentEnergyLevel={currentEnergyLevel}
+              onFocusTask={handleFocusTask}
+            />
 
             {/* Leerer Bereich für Mittelteil */}
             <div className="flex-grow"></div>
