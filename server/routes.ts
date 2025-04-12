@@ -6,8 +6,11 @@ import { analyzeAndBreakdownTask } from "./gemini";
 import {
   insertTaskSchema,
   insertTaskStepSchema,
+  insertProductivitySessionSchema,
+  insertTimeBlockPatternSchema,
   EnergyLevel,
   PriorityLevel,
+  CategoryType,
 } from "@shared/schema";
 
 export async function registerRoutes(app: Express): Promise<Server> {
@@ -228,16 +231,241 @@ export async function registerRoutes(app: Express): Promise<Server> {
         });
       }
 
+      // If step is being marked as completed, add completedAt timestamp
+      const updateData = { ...validationResult.data };
+      if (updateData.completed === true) {
+        updateData.completedAt = new Date();
+      }
+
       // Update the step
-      const updatedStep = await storage.updateTaskStep(stepId, validationResult.data);
+      const updatedStep = await storage.updateTaskStep(stepId, updateData);
       if (!updatedStep) {
         return res.status(404).json({ message: "Task step not found" });
+      }
+
+      // If the step is being marked as completed, check if all steps for this task are completed
+      if (updateData.completed === true) {
+        const task = await storage.getTaskWithSteps(updatedStep.taskId);
+        if (task && task.steps.every(step => step.completed)) {
+          // If all steps are completed, mark the task as completed
+          await storage.updateTask(updatedStep.taskId, { 
+            completed: true,
+            completedAt: new Date()
+          });
+        }
       }
 
       return res.json(updatedStep);
     } catch (error) {
       console.error("Error updating task step:", error);
       return res.status(500).json({ message: "Failed to update task step" });
+    }
+  });
+
+  // ---------- PRODUCTIVITY ANALYTICS ENDPOINTS ----------
+
+  // GET tasks by category
+  app.get("/api/tasks/category/:category", async (req: Request, res: Response) => {
+    try {
+      const category = req.params.category as CategoryType;
+      
+      if (!Object.values(CategoryType).includes(category)) {
+        return res.status(400).json({ message: "Invalid category" });
+      }
+      
+      const tasks = await storage.getTasksByCategory(category);
+      return res.json(tasks);
+    } catch (error) {
+      console.error("Error getting tasks by category:", error);
+      return res.status(500).json({ message: "Failed to get tasks" });
+    }
+  });
+
+  // Start a productivity session
+  app.post("/api/productivity/sessions", async (req: Request, res: Response) => {
+    try {
+      // Validate session data
+      const sessionSchema = z.object({
+        taskId: z.number().optional(),
+        energyLevelBefore: z.enum([EnergyLevel.LOW, EnergyLevel.MEDIUM, EnergyLevel.HIGH]).optional(),
+        tags: z.array(z.string()).optional(),
+      });
+
+      const validationResult = sessionSchema.safeParse(req.body);
+      if (!validationResult.success) {
+        return res.status(400).json({ 
+          message: "Invalid session data", 
+          errors: validationResult.error.format() 
+        });
+      }
+
+      const { taskId, energyLevelBefore, tags } = validationResult.data;
+      
+      const session = await storage.createProductivitySession({
+        userId: 1, // Default user ID for now
+        taskId,
+        startTime: new Date(),
+        energyLevelBefore,
+        tags: tags || [],
+      });
+
+      return res.status(201).json(session);
+    } catch (error) {
+      console.error("Error starting productivity session:", error);
+      return res.status(500).json({ message: "Failed to start productivity session" });
+    }
+  });
+
+  // End a productivity session
+  app.post("/api/productivity/sessions/:id/end", async (req: Request, res: Response) => {
+    try {
+      const sessionId = parseInt(req.params.id);
+      if (isNaN(sessionId)) {
+        return res.status(400).json({ message: "Invalid session ID" });
+      }
+
+      // Validate end session data
+      const endSessionSchema = z.object({
+        energyLevelAfter: z.enum([EnergyLevel.LOW, EnergyLevel.MEDIUM, EnergyLevel.HIGH]).optional(),
+        interruptions: z.number().min(0).optional(),
+        productivityScore: z.number().min(1).max(10).optional(),
+        notes: z.string().optional(),
+      });
+
+      const validationResult = endSessionSchema.safeParse(req.body);
+      if (!validationResult.success) {
+        return res.status(400).json({ 
+          message: "Invalid session data", 
+          errors: validationResult.error.format() 
+        });
+      }
+
+      // Get the current session
+      const session = await storage.getProductivitySession(sessionId);
+      if (!session) {
+        return res.status(404).json({ message: "Session not found" });
+      }
+
+      // If session is already ended
+      if (session.endTime) {
+        return res.status(400).json({ message: "Session already ended" });
+      }
+
+      const { energyLevelAfter, interruptions, productivityScore, notes } = validationResult.data;
+      const endTime = new Date();
+      
+      // Calculate duration in seconds
+      const startTime = new Date(session.startTime);
+      const duration = Math.floor((endTime.getTime() - startTime.getTime()) / 1000);
+      
+      // Update the session
+      const updatedSession = await storage.updateProductivitySession(sessionId, {
+        endTime,
+        duration,
+        energyLevelAfter,
+        interruptions,
+        productivityScore,
+        notes,
+      });
+
+      // If this session is linked to a task, update the task's actual duration
+      if (session.taskId) {
+        const task = await storage.getTask(session.taskId);
+        if (task) {
+          const actualDuration = (task.actualDuration || 0) + Math.floor(duration / 60);
+          await storage.updateTask(session.taskId, { actualDuration });
+        }
+      }
+
+      // Generate or update daily analytics
+      await storage.updateProductivityAnalytics(session.userId || 1, endTime);
+
+      return res.json(updatedSession);
+    } catch (error) {
+      console.error("Error ending productivity session:", error);
+      return res.status(500).json({ message: "Failed to end productivity session" });
+    }
+  });
+
+  // Get productivity analytics
+  app.get("/api/productivity/analytics", async (req: Request, res: Response) => {
+    try {
+      const userId = 1; // Default user ID for now
+      
+      // Parse timeframe from query params
+      let timeframe = req.query.timeframe as string || 'week';
+      if (!['day', 'week', 'month', 'year'].includes(timeframe)) {
+        timeframe = 'week';
+      }
+      
+      const analytics = await storage.getProductivityAnalytics(userId, timeframe);
+      
+      return res.json(analytics);
+    } catch (error) {
+      console.error("Error fetching productivity analytics:", error);
+      return res.status(500).json({ message: "Failed to fetch productivity analytics" });
+    }
+  });
+
+  // Get time block patterns
+  app.get("/api/productivity/time-blocks", async (req: Request, res: Response) => {
+    try {
+      const userId = 1; // Default user ID for now
+      const timeBlocks = await storage.getTimeBlockPatterns(userId);
+      
+      return res.json(timeBlocks);
+    } catch (error) {
+      console.error("Error fetching time blocks:", error);
+      return res.status(500).json({ message: "Failed to fetch time blocks" });
+    }
+  });
+
+  // Create a time block pattern
+  app.post("/api/productivity/time-blocks", async (req: Request, res: Response) => {
+    try {
+      // Validate time block data
+      const timeBlockSchema = z.object({
+        name: z.string().min(1, "Name is required"),
+        startHour: z.number().min(0).max(23),
+        endHour: z.number().min(0).max(23),
+        dayOfWeek: z.number().min(0).max(6).optional(),
+        energyLevelMatch: z.enum([EnergyLevel.LOW, EnergyLevel.MEDIUM, EnergyLevel.HIGH]).optional(),
+        taskTypes: z.array(z.enum([
+          CategoryType.PERSONAL,
+          CategoryType.WORK,
+          CategoryType.FAMILY,
+          CategoryType.HEALTH
+        ])).optional(),
+      });
+
+      const validationResult = timeBlockSchema.safeParse(req.body);
+      if (!validationResult.success) {
+        return res.status(400).json({ 
+          message: "Invalid time block data", 
+          errors: validationResult.error.format() 
+        });
+      }
+
+      const { name, startHour, endHour, dayOfWeek, energyLevelMatch, taskTypes } = validationResult.data;
+      
+      const timeBlock = await storage.createTimeBlockPattern({
+        userId: 1, // Default user ID for now
+        name,
+        startHour,
+        endHour,
+        dayOfWeek,
+        energyLevelMatch,
+        taskTypes: taskTypes || [],
+        effectivenessScore: 5, // Default middle score
+        timesUsed: 0,
+        averageCompletionRate: 0,
+        isActive: true,
+      });
+
+      return res.status(201).json(timeBlock);
+    } catch (error) {
+      console.error("Error creating time block pattern:", error);
+      return res.status(500).json({ message: "Failed to create time block pattern" });
     }
   });
 
