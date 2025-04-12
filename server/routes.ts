@@ -11,7 +11,7 @@ import {
   EnergyLevel,
   PriorityLevel,
   CategoryType,
-} from "@shared/schema";
+} from "../shared/schema";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // GET all tasks

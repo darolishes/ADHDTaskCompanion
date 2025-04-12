@@ -1,10 +1,4 @@
 import { 
-  users, 
-  tasks, 
-  taskSteps,
-  productivitySessions,
-  productivityAnalytics,
-  timeBlockPatterns,
   type User, 
   type InsertUser, 
   type Task, 
@@ -21,9 +15,8 @@ import {
   type InsertProductivityAnalytic,
   type TimeBlockPattern,
   type InsertTimeBlockPattern,
-  type ProductivityAnalyticsResponse,
-  type ProductivityMetadata,
-} from "@shared/schema";
+  type ProductivityAnalyticsResponse
+} from "../shared/schema";
 
 export interface IStorage {
   // User operations
@@ -214,6 +207,105 @@ export class MemStorage implements IStorage {
 
   async deleteTaskStep(id: number): Promise<boolean> {
     return this.taskSteps.delete(id);
+  }
+
+  // Implementieren der TasksByCategory-Methode
+  async getTasksByCategory(category: CategoryType): Promise<Task[]> {
+    return Array.from(this.tasks.values()).filter(
+      (task) => task.category === category,
+    );
+  }
+
+  // Productivity Session operations
+  async getProductivitySessions(userId: number): Promise<ProductivitySession[]> {
+    return Array.from(this.productivitySessions.values()).filter(
+      (session) => session.userId === userId,
+    );
+  }
+
+  async getProductivitySession(id: number): Promise<ProductivitySession | undefined> {
+    return this.productivitySessions.get(id);
+  }
+
+  async createProductivitySession(insertSession: InsertProductivitySession): Promise<ProductivitySession> {
+    const id = this.sessionId++;
+    const session: ProductivitySession = { 
+      ...insertSession, 
+      id,
+      tags: insertSession.tags || []
+    };
+    this.productivitySessions.set(id, session);
+    return session;
+  }
+
+  async updateProductivitySession(id: number, sessionUpdate: Partial<ProductivitySession>): Promise<ProductivitySession | undefined> {
+    const session = this.productivitySessions.get(id);
+    
+    if (!session) {
+      return undefined;
+    }
+    
+    const updatedSession = { ...session, ...sessionUpdate };
+    this.productivitySessions.set(id, updatedSession);
+    
+    return updatedSession;
+  }
+
+  // Productivity Analytics operations
+  async getProductivityAnalytics(userId: number, timeframe: string): Promise<ProductivityAnalyticsResponse> {
+    // Logik zur Generierung von Analysen basierend auf dem Timeframe
+    // Placeholder für die Entwicklung
+    return {
+      summary: {
+        totalTasksCompleted: 0,
+        totalTimeSpent: 0,
+        averageProductivityScore: null,
+        mostProductiveTimeOfDay: null,
+        mostCompletedCategory: null,
+        energyTrend: {
+          highEnergy: 0,
+          mediumEnergy: 0,
+          lowEnergy: 0,
+        },
+      },
+      dailyStats: []
+    };
+  }
+
+  async updateProductivityAnalytics(userId: number, date: Date): Promise<void> {
+    // Logik zur Aktualisierung von Analytics nach Session-Ende
+    // Für die Entwicklung leer lassen
+  }
+
+  // Time Block Pattern operations
+  async getTimeBlockPatterns(userId: number): Promise<TimeBlockPattern[]> {
+    return Array.from(this.timeBlockPatterns.values()).filter(
+      (pattern) => pattern.userId === userId,
+    );
+  }
+
+  async getTimeBlockPattern(id: number): Promise<TimeBlockPattern | undefined> {
+    return this.timeBlockPatterns.get(id);
+  }
+
+  async createTimeBlockPattern(insertPattern: InsertTimeBlockPattern): Promise<TimeBlockPattern> {
+    const id = this.timeBlockId++;
+    const pattern: TimeBlockPattern = { ...insertPattern, id };
+    this.timeBlockPatterns.set(id, pattern);
+    return pattern;
+  }
+
+  async updateTimeBlockPattern(id: number, patternUpdate: Partial<TimeBlockPattern>): Promise<TimeBlockPattern | undefined> {
+    const pattern = this.timeBlockPatterns.get(id);
+    
+    if (!pattern) {
+      return undefined;
+    }
+    
+    const updatedPattern = { ...pattern, ...patternUpdate };
+    this.timeBlockPatterns.set(id, updatedPattern);
+    
+    return updatedPattern;
   }
 }
 

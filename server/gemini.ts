@@ -1,5 +1,5 @@
 import { GoogleGenerativeAI, HarmCategory, HarmBlockThreshold } from "@google/generative-ai";
-import { InsertTask, InsertTaskStep, EnergyLevel, PriorityLevel, Task, CategoryType } from "@shared/schema";
+import { InsertTask, InsertTaskStep, EnergyLevel, PriorityLevel, Task, CategoryType } from "../shared/schema";
 
 // Emoji-Kategorien für Aufgabentypen
 export const EmojiCategories = {

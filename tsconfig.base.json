@@ -1,16 +1,31 @@
-
 {
   "compilerOptions": {
-    "target": "ESNext",
+    "target": "ES2020",
     "module": "ESNext",
-    "moduleResolution": "bundler",
+    "moduleResolution": "node",
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
     "strict": true,
     "skipLibCheck": true,
-    "esModuleInterop": true,
     "jsx": "react-jsx",
-    "baseUrl": ".",
+    "declaration": true,
+    "declarationMap": true,
+    "sourceMap": true,
+    "composite": true,
+    "noEmitOnError": true,
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+    "resolveJsonModule": true,
     "paths": {
-      "@adhd/shared/*": ["packages/shared/src/*"]
+      "@adhd/schema": ["./packages/schema/src"],
+      "@adhd/schema/*": ["./packages/schema/src/*"],
+      "@adhd/ui": ["./packages/ui/src"],
+      "@adhd/ui/*": ["./packages/ui/src/*"],
+      "@adhd/ai-helpers": ["./packages/ai-helpers/src"],
+      "@adhd/ai-helpers/*": ["./packages/ai-helpers/src/*"],
+      "@adhd/utils": ["./packages/utils/src"],
+      "@adhd/utils/*": ["./packages/utils/src/*"]
     }
-  }
+  },
+  "exclude": ["node_modules"]
 }
