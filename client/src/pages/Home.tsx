@@ -192,7 +192,7 @@ export default function Home() {
             </div>
           </div>
         ) : (
-          <div className="max-w-md mx-auto px-4 pb-24">
+          <div className="min-h-screen max-w-md mx-auto px-4 pb-24 flex flex-col">
             <div className={`mb-6 mt-4 transition-all duration-500 ${animateIn ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
               <div className="mb-4">
                 <div className="flex justify-start mb-3">
@@ -236,9 +236,8 @@ export default function Home() {
               onFocusTask={handleFocusTask}
             />
 
-            <div className="flex-grow"></div>
-
-            <div className={`fixed bottom-24 left-0 right-0 px-4 transition-all duration-500 ${animateIn ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
+            {/* Kategoriekarten statt in fixed position einfach im normalen Flow des Dokuments */}
+            <div className={`mt-auto pt-12 pb-24 px-4 transition-all duration-500 ${animateIn ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
               <div className="overflow-x-auto pb-4 -mx-4 px-4" style={{ scrollSnapType: 'x mandatory', WebkitOverflowScrolling: 'touch' }}>
                 <div className="flex gap-8 pb-6 px-2 justify-start">
                   {categories.map(category => (
