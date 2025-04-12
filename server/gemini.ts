@@ -1,6 +1,18 @@
 import { GoogleGenerativeAI, HarmCategory, HarmBlockThreshold } from "@google/generative-ai";
 import { InsertTask, InsertTaskStep, EnergyLevel, PriorityLevel, Task } from "@shared/schema";
 
+// Emoji-Kategorien für Aufgabentypen
+export const EmojiCategories = {
+  WORK: ["💼", "📊", "📈", "👔", "🖥️", "📱", "📝", "📅", "🗓️", "📌", "📋", "📎", "📏", "✏️", "📑"],
+  PERSONAL: ["🏃", "🧘", "🎮", "📚", "🎵", "🎬", "🎨", "🎭", "🏠", "🛒", "🧹", "🛁", "👕", "🍽️", "🧠"],
+  HEALTH: ["🏋️", "🥗", "🥦", "💊", "💉", "🧘", "💆", "🧠", "❤️", "🫀", "🦷", "👁️", "👂", "🛌", "🚶"],
+  FAMILY: ["👨‍👩‍👧‍👦", "👶", "🧒", "🧓", "🏡", "🛋️", "🧸", "🎁", "🎂", "🎉", "🎪", "🎠", "🎡", "🚗", "⛱️"],
+  EDUCATION: ["📚", "🎓", "🧠", "✍️", "📝", "📒", "📏", "🔬", "🔭", "🧪", "🧮", "🗣️", "🌐", "🎭", "🖥️"],
+  HOBBY: ["🎨", "🎮", "🎬", "🎭", "🎹", "🎸", "🥁", "🎯", "🎲", "📸", "🏊", "🚴", "⚽", "🎣", "🏂"],
+  TRAVEL: ["✈️", "🏝️", "🏔️", "🏕️", "🚗", "🚆", "🚢", "🧳", "🗺️", "🧭", "🔭", "🌄", "🌅", "🏞️", "🌐"],
+  FINANCE: ["💰", "💳", "💵", "📊", "📈", "💹", "🏦", "🧾", "📄", "📂", "💼", "📱", "🔐", "📇", "🖋️"],
+};
+
 // Google Gemini API für die Aufgabenanalyse
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || "AIzaSyBRNvjqztgTYMrbKcYTmYauLHDRKy-T63Q");
 
@@ -215,7 +227,7 @@ export async function getDailyFocusSuggestions(
     ];
 
     // Bereite Aufgabendaten für die KI vor
-    const taskData = incompleteTasks.map(task => {
+    const taskData = uncompletedTasks.map((task: Task) => {
       return {
         id: task.id,
         title: task.title,
@@ -290,7 +302,7 @@ export async function getDailyFocusSuggestions(
     } catch (parseError) {
       console.error("Fehler beim Parsen der JSON-Antwort:", parseError);
       // Fallback
-      return createFallbackFocusSuggestions(incompleteTasks);
+      return createFallbackFocusSuggestions(uncompletedTasks);
     }
   } catch (error) {
     console.error("Gemini API Fehler bei Fokusvorschlägen:", error);
@@ -318,6 +330,115 @@ function createFallbackFocusSuggestions(tasks: Task[]): DailyFocusResponse {
     topTasks,
     motivationalMessage: "Konzentriere dich auf eine Aufgabe nach der anderen!"
   };
+}
+
+// Emoji-Vorhersage für Aufgaben basierend auf Aufgabentitel und Beschreibung
+export async function predictTaskEmoji(
+  taskTitle: string,
+  taskDescription: string = ""
+): Promise<string[]> {
+  try {
+    // Gemini-Modell konfigurieren
+    const model = genAI.getGenerativeModel({ model: "gemini-1.5-pro" });
+    
+    const generationConfig = {
+      temperature: 0.7,
+      topK: 32,
+      topP: 0.95,
+      maxOutputTokens: 1024,
+    };
+    
+    // Standard-Sicherheitseinstellungen verwenden
+    const safetySettings = [
+      {
+        category: HarmCategory.HARM_CATEGORY_HARASSMENT,
+        threshold: HarmBlockThreshold.BLOCK_MEDIUM_AND_ABOVE,
+      },
+      {
+        category: HarmCategory.HARM_CATEGORY_HATE_SPEECH,
+        threshold: HarmBlockThreshold.BLOCK_MEDIUM_AND_ABOVE,
+      },
+      {
+        category: HarmCategory.HARM_CATEGORY_SEXUALLY_EXPLICIT,
+        threshold: HarmBlockThreshold.BLOCK_MEDIUM_AND_ABOVE,
+      },
+      {
+        category: HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT,
+        threshold: HarmBlockThreshold.BLOCK_MEDIUM_AND_ABOVE,
+      },
+    ];
+
+    // Prompt für die KI erstellen
+    const prompt = `
+      Aufgabentitel: "${taskTitle}"
+      ${taskDescription ? `Beschreibung: "${taskDescription}"` : ""}
+      
+      Analysiere diese Aufgabe und schlage 5 passende Emojis vor, die den Inhalt oder Kontext der Aufgabe am besten repräsentieren.
+      Die Emojis sollten dem Nutzer helfen, schnell zu erkennen, worum es bei der Aufgabe geht.
+      
+      Gib NUR ein JSON-Array mit 5 Emojis zurück, ohne zusätzlichen Text oder Erklärungen.
+      
+      Beispiel:
+      ["📝", "📚", "🎓", "📊", "💻"]
+      
+      Deine Antwort:
+    `;
+    
+    // Chat mit dem Modell
+    const chat = model.startChat({
+      generationConfig,
+      safetySettings,
+      history: [
+        {
+          role: "user",
+          parts: [{ text: "Du bist ein Experte für die Kategorisierung von Aufgaben mit passenden Emojis." }],
+        },
+        {
+          role: "model",
+          parts: [{ text: "Ich bin bereit, jede Aufgabe zu analysieren und passende Emojis vorzuschlagen, die den Inhalt oder Kontext der Aufgabe am besten repräsentieren." }],
+        },
+      ],
+    });
+
+    const result = await chat.sendMessage(prompt);
+    const response = await result.response;
+    const responseText = response.text();
+    
+    // Parse das JSON-Ergebnis
+    try {
+      // Manchmal kann die KI zusätzlichen Text zurückgeben, daher versuchen wir, alles außer dem JSON-Array zu entfernen
+      let cleanedResponse = responseText.trim();
+      // Wenn die Antwort mit ``` beginnt und endet (Markdown-Codeblock), entfernen wir diese
+      if (cleanedResponse.startsWith("```") && cleanedResponse.endsWith("```")) {
+        cleanedResponse = cleanedResponse.slice(3, -3).trim();
+        // Wenn nach dem Entfernen der ``` noch "json" am Anfang steht, entfernen wir auch das
+        if (cleanedResponse.startsWith("json")) {
+          cleanedResponse = cleanedResponse.slice(4).trim();
+        }
+      }
+      
+      const parsedEmojis = JSON.parse(cleanedResponse) as string[];
+      
+      // Stelle sicher, dass wir genau 5 Emojis haben
+      const emojis = parsedEmojis.slice(0, 5);
+      
+      // Falls wir weniger als 5 Emojis haben, fülle mit allgemeinen Emojis auf
+      while (emojis.length < 5) {
+        const defaultEmojis = ["📝", "✅", "⏰", "🔔", "📌"];
+        emojis.push(defaultEmojis[emojis.length]);
+      }
+      
+      return emojis;
+    } catch (parseError) {
+      console.error("Fehler beim Parsen der Emoji-Antwort:", parseError);
+      // Fallback bei Parsing-Fehler
+      return ["📝", "✅", "⏰", "🔔", "📌"];
+    }
+  } catch (error) {
+    console.error("Gemini API Fehler bei Emoji-Vorhersage:", error);
+    // Fallback bei API-Fehler
+    return ["📝", "✅", "⏰", "🔔", "📌"];
+  }
 }
 
 function validatePriority(priority: string): PriorityLevel {
