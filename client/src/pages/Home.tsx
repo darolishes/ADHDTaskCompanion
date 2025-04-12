@@ -285,13 +285,13 @@ export default function Home() {
                 <div className="flex gap-6 pb-6 px-2 justify-center">
                   {/* Personal-Karte */}
                   <div 
-                    className="flex-shrink-0 w-[250px] h-[280px] bg-white rounded-xl shadow-md overflow-hidden cursor-pointer"
+                    className="flex-shrink-0 w-[300px] h-[560px] bg-white rounded-xl shadow-md overflow-hidden cursor-pointer"
                     onClick={() => handleSelectCategory('personal')}
                   >
                     <div className="p-6 h-full flex flex-col">
                       <div className="flex justify-between items-start mb-5">
-                        <div className="w-12 h-12 rounded-full bg-amber-100 flex items-center justify-center">
-                          <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-amber-500" viewBox="0 0 20 20" fill="currentColor">
+                        <div className="w-20 h-20 rounded-full bg-amber-100 flex items-center justify-center">
+                          <svg xmlns="http://www.w3.org/2000/svg" className="h-10 w-10 text-amber-500" viewBox="0 0 20 20" fill="currentColor">
                             <path fillRule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clipRule="evenodd" />
                           </svg>
                         </div>
@@ -304,7 +304,7 @@ export default function Home() {
                       
                       <div className="mt-auto mb-6">
                         <p className="text-sm font-medium text-gray-500 mb-1">{uncompletedTasks.length} {uncompletedTasks.length === 1 ? 'task' : 'tasks'}</p>
-                        <h2 className="text-3xl font-bold">Personal</h2>
+                        <h2 className="text-4xl font-bold">Personal</h2>
                       </div>
                       
                       {/* Progress bar */}
@@ -319,13 +319,13 @@ export default function Home() {
                   
                   {/* Work-Karte */}
                   <div 
-                    className="flex-shrink-0 w-[250px] h-[280px] bg-white rounded-xl shadow-md overflow-hidden cursor-pointer"
+                    className="flex-shrink-0 w-[300px] h-[560px] bg-white rounded-xl shadow-md overflow-hidden cursor-pointer"
                     onClick={() => handleSelectCategory('work')}
                   >
                     <div className="p-6 h-full flex flex-col">
                       <div className="flex justify-between items-start mb-5">
-                        <div className="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center">
-                          <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-blue-500" viewBox="0 0 20 20" fill="currentColor">
+                        <div className="w-20 h-20 rounded-full bg-blue-100 flex items-center justify-center">
+                          <svg xmlns="http://www.w3.org/2000/svg" className="h-10 w-10 text-blue-500" viewBox="0 0 20 20" fill="currentColor">
                             <path fillRule="evenodd" d="M6 6V5a3 3 0 013-3h2a3 3 0 013 3v1h2a2 2 0 012 2v3.57A22.952 22.952 0 0110 13a22.95 22.95 0 01-8-1.43V8a2 2 0 012-2h2zm2-1a1 1 0 011-1h2a1 1 0 011 1v1H8V5zm1 5a1 1 0 011-1h.01a1 1 0 110 2H10a1 1 0 01-1-1z" clipRule="evenodd" />
                             <path d="M2 13.692V16a2 2 0 002 2h12a2 2 0 002-2v-2.308A24.974 24.974 0 0110 15c-2.796 0-5.487-.46-8-1.308z" />
                           </svg>
@@ -351,13 +351,13 @@ export default function Home() {
                   
                   {/* Family-Karte */}
                   <div 
-                    className="flex-shrink-0 w-[250px] h-[280px] bg-white rounded-xl shadow-md overflow-hidden cursor-pointer"
+                    className="flex-shrink-0 w-[300px] h-[560px] bg-white rounded-xl shadow-md overflow-hidden cursor-pointer"
                     onClick={() => handleSelectCategory('family')}
                   >
                     <div className="p-6 h-full flex flex-col">
                       <div className="flex justify-between items-start mb-5">
-                        <div className="w-12 h-12 rounded-full bg-green-100 flex items-center justify-center">
-                          <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-green-500" viewBox="0 0 20 20" fill="currentColor">
+                        <div className="w-20 h-20 rounded-full bg-green-100 flex items-center justify-center">
+                          <svg xmlns="http://www.w3.org/2000/svg" className="h-10 w-10 text-green-500" viewBox="0 0 20 20" fill="currentColor">
                             <path d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3zM6 8a2 2 0 11-4 0 2 2 0 014 0zM16 18v-3a5.972 5.972 0 00-.75-2.906A3.005 3.005 0 0119 15v3h-3zM4.75 12.094A5.973 5.973 0 004 15v3H1v-3a3 3 0 013.75-2.906z" />
                           </svg>
                         </div>
