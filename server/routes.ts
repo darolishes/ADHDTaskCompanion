@@ -69,6 +69,16 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const taskSchema = z.object({
         title: z.string().min(1, "Task title is required"),
         energyLevel: z.enum([EnergyLevel.LOW, EnergyLevel.MEDIUM, EnergyLevel.HIGH]),
+        description: z.string().optional(),
+        priority: z.enum([PriorityLevel.LOW, PriorityLevel.MEDIUM, PriorityLevel.HIGH]).optional(),
+        estimatedDuration: z.number().positive().optional(),
+        dueDate: z.string().optional().nullable(),
+        category: z.enum([
+          CategoryType.PERSONAL, 
+          CategoryType.WORK, 
+          CategoryType.FAMILY, 
+          CategoryType.HEALTH
+        ]).optional(),
       });
 
       const validationResult = taskSchema.safeParse(req.body);
@@ -79,7 +89,15 @@ export async function registerRoutes(app: Express): Promise<Server> {
         });
       }
       
-      const { title, energyLevel } = validationResult.data;
+      const { 
+        title, 
+        energyLevel, 
+        description: userDescription, 
+        priority: userPriority,
+        estimatedDuration: userEstimatedDuration,
+        dueDate,
+        category
+      } = validationResult.data;
 
       // Use Google Gemini to analyze and breakdown the task
       const taskAnalysis = await analyzeAndBreakdownTask(title, energyLevel);
@@ -87,13 +105,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Create the main task
       const newTask = await storage.createTask({
         title,
-        description: taskAnalysis.description,
-        priority: taskAnalysis.priority as PriorityLevel,
+        description: userDescription || taskAnalysis.description,
+        priority: userPriority || (taskAnalysis.priority as PriorityLevel),
         energyLevel,
-        estimatedDuration: taskAnalysis.estimatedDuration,
+        estimatedDuration: userEstimatedDuration || taskAnalysis.estimatedDuration,
         completed: false,
         userId: 1, // Default user ID for now
-        dueDate: null,
+        dueDate: dueDate ? new Date(dueDate) : null,
+        category: category || CategoryType.PERSONAL,
       });
 
       // Create all task steps
