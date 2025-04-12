@@ -72,6 +72,69 @@
   body {
     @apply font-sans antialiased bg-background text-foreground;
   }
+  
+  /* Improved focus styles for accessibility */
+  :focus-visible {
+    @apply outline-none ring-2 ring-primary ring-offset-2 ring-offset-background;
+  }
+}
+
+@layer components {
+  /* Task item styles */
+  .task-item:hover .task-checkbox {
+    @apply scale-105;
+  }
+  
+  .task-item .focus-btn {
+    @apply opacity-0 transform translate-y-1;
+  }
+  
+  .task-item:hover .focus-btn {
+    @apply opacity-100 translate-y-0;
+  }
+  
+  /* Energy level badges */
+  .energy-badge {
+    @apply flex items-center text-xs px-2 py-0.5 rounded-full;
+  }
+  
+  .energy-badge-high {
+    @apply bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400;
+  }
+  
+  .energy-badge-medium {
+    @apply bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400;
+  }
+  
+  .energy-badge-low {
+    @apply bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400;
+  }
+  
+  /* Form styles */
+  .form-input-wrapper {
+    @apply relative transition-all duration-200;
+  }
+  
+  .form-input-wrapper:focus-within {
+    @apply ring-2 ring-primary/20 rounded-lg;
+  }
+  
+  /* Page transitions */
+  .page-transition-enter {
+    @apply opacity-0 transform translate-y-4;
+  }
+  
+  .page-transition-enter-active {
+    @apply opacity-100 transform translate-y-0 transition-all duration-300 ease-out;
+  }
+  
+  .page-transition-exit {
+    @apply opacity-100 transform translate-y-0;
+  }
+  
+  .page-transition-exit-active {
+    @apply opacity-0 transform -translate-y-4 transition-all duration-200 ease-in;
+  }
 }
 
 /* Animation definitions */
@@ -85,6 +148,16 @@
   100% { transform: translateY(0); opacity: 1; }
 }
 
+@keyframes slideInRight {
+  0% { transform: translateX(20px); opacity: 0; }
+  100% { transform: translateX(0); opacity: 1; }
+}
+
+@keyframes slideInLeft {
+  0% { transform: translateX(-20px); opacity: 0; }
+  100% { transform: translateX(0); opacity: 1; }
+}
+
 @keyframes pulseLight {
   0%, 100% { opacity: 1; }
   50% { opacity: 0.7; }
@@ -93,6 +166,11 @@
 @keyframes task-enter {
   from { transform: translateY(20px); opacity: 0; }
   to { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes scale-in {
+  from { transform: scale(0.95); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
 }
 
 @keyframes confetti {
@@ -106,13 +184,53 @@
   }
 }
 
-/* Set energy selector style */
-.energy-option input:checked + label {
-  border-color: theme('colors.primary.DEFAULT');
-  background-color: theme('colors.primary.DEFAULT');
-  background-opacity: 0.05;
+@keyframes bounce-subtle {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-5px); }
 }
 
+/* Set energy selector style */
+.energy-option input:checked + label {
+  @apply border-primary bg-primary/10 text-primary font-medium;
+}
+
+.energy-option label {
+  @apply transition-all duration-200;
+}
+
+.energy-option input:focus + label {
+  @apply ring-2 ring-primary/50 ring-offset-1;
+}
+
+/* Timer progress */
 .timer-progress {
   transition: width 1s linear;
+}
+
+/* Improved checkbox style */
+.task-checkbox {
+  @apply transition-all duration-200 relative overflow-hidden;
+}
+
+.task-checkbox::after {
+  content: '';
+  @apply absolute inset-0 scale-0 bg-primary opacity-0 rounded-full transition-all duration-300;
+}
+
+.task-checkbox:active::after {
+  @apply scale-100 opacity-20;
+}
+
+/* Improved focus mode */
+.focus-mode-container {
+  @apply relative overflow-hidden;
+}
+
+.focus-mode-container::before {
+  content: '';
+  @apply absolute inset-0 bg-gradient-to-b from-background/80 to-background opacity-0 transition-opacity duration-700;
+}
+
+.focus-mode-active .focus-mode-container::before {
+  @apply opacity-100;
 }

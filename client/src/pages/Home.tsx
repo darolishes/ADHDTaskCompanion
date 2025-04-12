@@ -68,48 +68,58 @@ export default function Home() {
   const isFocusMode = focusTaskId !== null && focusTask;
   
   return (
-    <div className="bg-background text-foreground min-h-screen pb-24 transition-colors duration-300">
-      {/* Header */}
-      <header className="px-6 pt-12 pb-6 flex justify-between items-center">
-        <div className={`transition-all duration-500 ${animateIn ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-4'}`}>
-          <h1 className="text-2xl font-semibold">Focus Flow</h1>
-          <p className="text-sm text-muted-foreground">{formatDate(new Date())}</p>
-        </div>
-        <div className="flex items-center space-x-2">
-          <ThemeToggle />
-          <div 
-            className={`w-10 h-10 rounded-full bg-primary text-primary-foreground flex items-center justify-center transition-transform duration-500 ${
-              animateIn ? 'scale-100' : 'scale-0'
-            }`}
-          >
-            <span className="text-sm font-medium">JD</span>
+    <div className={`bg-background text-foreground min-h-screen transition-colors duration-500 
+      ${isFocusMode ? 'focus-mode-active' : ''}`}>
+      {/* Header with blurred effect on scroll */}
+      <header className="sticky top-0 z-10 backdrop-blur-sm bg-background/80 border-b border-border/20">
+        <div className="max-w-2xl mx-auto px-6 py-4 flex justify-between items-center">
+          <div className={`transition-all duration-500 ${animateIn ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-4'}`}>
+            <h1 className="text-xl font-semibold">
+              <span className="bg-clip-text text-transparent bg-gradient-to-r from-primary to-secondary">Focus Flow</span>
+            </h1>
+            <p className="text-xs text-muted-foreground">{formatDate(new Date())}</p>
+          </div>
+          <div className="flex items-center space-x-3">
+            <ThemeToggle />
+            <div 
+              className={`w-10 h-10 rounded-full bg-gradient-to-br from-primary to-primary/70 text-primary-foreground flex items-center justify-center shadow-sm transition-transform duration-500 ${
+                animateIn ? 'scale-100' : 'scale-0'
+              }`}
+            >
+              <span className="text-sm font-medium">JD</span>
+            </div>
           </div>
         </div>
       </header>
       
       {/* Main content */}
-      <main className="px-6 pb-24 max-w-2xl mx-auto">
+      <main className="px-6 pb-24 pt-6 max-w-2xl mx-auto focus-mode-container">
         {!isFocusMode && (
           <div 
-            className={`mb-8 py-4 px-5 bg-card border border-border rounded-xl shadow-sm transition-all duration-700 ${
+            className={`mb-8 py-4 px-5 bg-card border border-border rounded-xl shadow-sm transition-all duration-700 
+              hover:shadow-md hover:border-primary/30 group ${
               animateIn ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
             }`}
           >
-            <p className="text-card-foreground italic text-sm">
+            <p className="text-card-foreground italic text-sm group-hover:text-primary/90 transition-colors">
               "{getRandomQuote()}"
             </p>
-            <p className="text-muted-foreground text-xs mt-1">— Focus Flow</p>
+            <p className="text-muted-foreground text-xs mt-2 opacity-70">
+              — Focus Flow
+            </p>
           </div>
         )}
         
         {!isFocusMode && (
-          <section className="mb-8">
+          <section className={`mb-8 transition-all duration-700 ${
+            animateIn ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
+          }`}>
             <TaskAddForm onAddSuccess={() => queryClient.invalidateQueries({ queryKey: ['/api/tasks'] })} />
           </section>
         )}
         
         {isFocusMode && focusTask ? (
-          <section className="mb-8 transition-all duration-300 ease-in-out">
+          <section className="mb-8 animate-[scale-in_0.3s_ease-out]">
             <TaskFocusView
               task={focusTask}
               onBack={handleBackToTasks}
@@ -118,49 +128,55 @@ export default function Home() {
         ) : (
           <section>
             {!isLoading && tasks.length > 0 && (
-              <div className="mb-4 flex justify-between items-center">
+              <div className={`mb-4 flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 transition-all duration-700 ${
+                animateIn ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
+              }`}>
                 <h2 className="text-lg font-semibold">Your Tasks</h2>
-                <div className="flex space-x-1">
-                  <button 
-                    onClick={() => setFilter('all')}
-                    className={`px-3 py-1 text-sm rounded-md transition-colors ${
-                      filter === 'all' 
-                        ? 'bg-primary text-primary-foreground' 
-                        : 'bg-muted hover:bg-muted/80 text-muted-foreground'
-                    }`}
-                  >
-                    All
-                  </button>
-                  <button 
-                    onClick={() => setFilter('high')}
-                    className={`px-3 py-1 text-sm rounded-md transition-colors ${
-                      filter === 'high' 
-                        ? 'bg-destructive text-destructive-foreground' 
-                        : 'bg-muted hover:bg-muted/80 text-muted-foreground'
-                    }`}
-                  >
-                    High
-                  </button>
-                  <button 
-                    onClick={() => setFilter('medium')}
-                    className={`px-3 py-1 text-sm rounded-md transition-colors ${
-                      filter === 'medium' 
-                        ? 'bg-amber-500 text-white' 
-                        : 'bg-muted hover:bg-muted/80 text-muted-foreground'
-                    }`}
-                  >
-                    Medium
-                  </button>
-                  <button 
-                    onClick={() => setFilter('low')}
-                    className={`px-3 py-1 text-sm rounded-md transition-colors ${
-                      filter === 'low' 
-                        ? 'bg-green-500 text-white' 
-                        : 'bg-muted hover:bg-muted/80 text-muted-foreground'
-                    }`}
-                  >
-                    Low
-                  </button>
+                
+                {/* Priority filter */}
+                <div className="flex w-full sm:w-auto">
+                  <div className="flex p-1 bg-muted rounded-lg w-full sm:w-auto">
+                    <button 
+                      onClick={() => setFilter('all')}
+                      className={`flex-1 sm:flex-initial px-3 py-1.5 text-xs font-medium rounded-md transition-all ${
+                        filter === 'all' 
+                          ? 'bg-primary text-primary-foreground shadow-sm' 
+                          : 'text-muted-foreground hover:text-foreground'
+                      }`}
+                    >
+                      All
+                    </button>
+                    <button 
+                      onClick={() => setFilter('high')}
+                      className={`flex-1 sm:flex-initial px-3 py-1.5 text-xs font-medium rounded-md transition-all ${
+                        filter === 'high' 
+                          ? 'bg-destructive text-destructive-foreground shadow-sm' 
+                          : 'text-muted-foreground hover:text-foreground'
+                      }`}
+                    >
+                      High
+                    </button>
+                    <button 
+                      onClick={() => setFilter('medium')}
+                      className={`flex-1 sm:flex-initial px-3 py-1.5 text-xs font-medium rounded-md transition-all ${
+                        filter === 'medium' 
+                          ? 'bg-amber-500 text-white shadow-sm' 
+                          : 'text-muted-foreground hover:text-foreground'
+                      }`}
+                    >
+                      Medium
+                    </button>
+                    <button 
+                      onClick={() => setFilter('low')}
+                      className={`flex-1 sm:flex-initial px-3 py-1.5 text-xs font-medium rounded-md transition-all ${
+                        filter === 'low' 
+                          ? 'bg-green-500 text-white shadow-sm' 
+                          : 'text-muted-foreground hover:text-foreground'
+                      }`}
+                    >
+                      Low
+                    </button>
+                  </div>
                 </div>
               </div>
             )}
@@ -171,8 +187,13 @@ export default function Home() {
               onFocusTask={handleFocusTask}
             />
             
-            <div className={`mt-8 transition-all duration-1000 ${animateIn ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-16'}`}>
-              <CalendarView tasks={tasks} />
+            <div className={`mt-10 transition-all duration-1000 delay-300 ${
+              animateIn ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-16'
+            }`}>
+              <h2 className="text-lg font-semibold mb-4">Calendar View</h2>
+              <div className="bg-card border border-border rounded-xl p-4 shadow-sm">
+                <CalendarView tasks={tasks} />
+              </div>
             </div>
           </section>
         )}
