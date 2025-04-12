@@ -416,6 +416,82 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Fokus für eine Aufgabe setzen oder entfernen
+  app.patch("/api/tasks/:id/focus", async (req: Request, res: Response) => {
+    try {
+      const taskId = parseInt(req.params.id);
+      if (isNaN(taskId)) {
+        return res.status(400).json({ message: "Ungültige Aufgaben-ID" });
+      }
+
+      // Prüfen, ob die Aufgabe existiert
+      const existingTask = await storage.getTask(taskId);
+      if (!existingTask) {
+        return res.status(404).json({ message: "Aufgabe nicht gefunden" });
+      }
+
+      // Fokus-Status umschalten
+      const focusUpdate = {
+        inFocus: !existingTask.inFocus,
+        focusedAt: !existingTask.inFocus ? new Date() : null,
+      };
+      
+      // Aufgabe aktualisieren
+      const updatedTask = await storage.updateTask(taskId, focusUpdate);
+      
+      // Wenn Fokus entfernt wird, Erfolg melden
+      if (!focusUpdate.inFocus) {
+        return res.json({
+          ...updatedTask,
+          message: "Fokus wurde entfernt"
+        });
+      }
+      
+      // Wenn Fokus gesetzt wird, alle anderen Aufgaben aus dem Fokus nehmen
+      const allTasks = await storage.getTasks();
+      const otherFocusedTasks = allTasks.filter(
+        task => task.id !== taskId && task.inFocus
+      );
+      
+      // Alle anderen Aufgaben aus dem Fokus nehmen
+      for (const task of otherFocusedTasks) {
+        await storage.updateTask(task.id, { 
+          inFocus: false,
+          focusedAt: null
+        });
+      }
+      
+      return res.json({
+        ...updatedTask,
+        message: "Fokus wurde gesetzt"
+      });
+    } catch (error) {
+      console.error("Fehler beim Aktualisieren des Fokus:", error);
+      return res.status(500).json({ message: "Fehler beim Aktualisieren des Fokus" });
+    }
+  });
+  
+  // Fokussierte Aufgaben abrufen
+  app.get("/api/tasks/focused", async (req: Request, res: Response) => {
+    try {
+      const allTasks = await storage.getTasks();
+      const focusedTasks = await Promise.all(
+        allTasks
+          .filter(task => task.inFocus)
+          .map(async task => {
+            // Vollständige Aufgabe mit Schritten abrufen
+            const taskWithSteps = await storage.getTaskWithSteps(task.id);
+            return taskWithSteps;
+          })
+      );
+      
+      return res.json(focusedTasks);
+    } catch (error) {
+      console.error("Fehler beim Abrufen fokussierter Aufgaben:", error);
+      return res.status(500).json({ message: "Fehler beim Abrufen fokussierter Aufgaben" });
+    }
+  });
+
   // Get daily focus suggestions
   app.get("/api/focus/daily", async (req: Request, res: Response) => {
     try {

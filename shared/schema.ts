@@ -60,6 +60,8 @@ export const tasks = pgTable("tasks", {
   completedAt: timestamp("completedAt"),
   category: text("category").$type<CategoryType>().default(CategoryType.PERSONAL),
   actualDuration: integer("actualDuration"), // in minutes
+  inFocus: boolean("inFocus").notNull().default(false),
+  focusedAt: timestamp("focusedAt")
 });
 
 // Task steps table
@@ -227,6 +229,8 @@ export const taskWithStepsSchema = z.object({
   completedAt: z.date().or(z.string()).nullable().transform(date => date ? new Date(date) : null),
   category: z.enum([CategoryType.PERSONAL, CategoryType.WORK, CategoryType.FAMILY, CategoryType.HEALTH]).default(CategoryType.PERSONAL),
   actualDuration: z.number().nullable(),
+  inFocus: z.boolean().default(false),
+  focusedAt: z.date().or(z.string()).nullable().transform(date => date ? new Date(date) : null),
   steps: z.array(z.object({
     id: z.number(), 
     taskId: z.number(),

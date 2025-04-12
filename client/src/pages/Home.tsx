@@ -31,11 +31,19 @@ export default function Home() {
     return () => clearTimeout(timer);
   }, []);
 
+  // Alle Aufgaben
   const { data: tasks = [], isLoading } = useQuery<Task[]>({
     queryKey: ['/api/tasks'],
     staleTime: 10000,
   });
+  
+  // Fokussierte Aufgaben (nur die, bei denen inFocus=true ist)
+  const { data: focusedTasks = [] } = useQuery<TaskWithSteps[]>({
+    queryKey: ['/api/tasks/focused'],
+    staleTime: 10000,
+  });
 
+  // Details der aktuell ausgewählten Aufgabe
   const { data: focusTask } = useQuery<TaskWithSteps>({
     queryKey: ['/api/tasks', focusTaskId],
     enabled: focusTaskId !== null,
