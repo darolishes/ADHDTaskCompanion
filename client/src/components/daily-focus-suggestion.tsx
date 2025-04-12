@@ -110,13 +110,47 @@ export function DailyFocusSuggestion({ currentEnergyLevel, onFocusTask }: DailyF
                     </Badge>
                   </div>
                   <p className="text-sm text-muted-foreground mb-2">{suggestion.reason}</p>
-                  <Button 
-                    size="sm" 
-                    onClick={() => onFocusTask(suggestion.taskId)}
-                    className="w-full"
-                  >
-                    Darauf fokussieren
-                  </Button>
+                  <div className="flex gap-2">
+                    <Button 
+                      size="sm" 
+                      onClick={() => onFocusTask(suggestion.taskId)}
+                      className="flex-1"
+                    >
+                      Details anzeigen
+                    </Button>
+                    <Button 
+                      size="sm" 
+                      variant="outline"
+                      className="flex-none"
+                      onClick={async () => {
+                        try {
+                          const result = await apiRequest('PATCH', `/api/tasks/${suggestion.taskId}/focus`, {});
+                          
+                          // Benachrichtigung anzeigen
+                          toast({
+                            title: result.inFocus ? "Aufgabe fokussiert" : "Fokus entfernt",
+                            description: result.inFocus 
+                              ? "Die Aufgabe wurde in den Fokus gesetzt." 
+                              : "Die Aufgabe wurde aus dem Fokus entfernt.",
+                          });
+                          
+                          // Daten aktualisieren
+                          queryClient.invalidateQueries({ queryKey: ['/api/tasks'] });
+                          queryClient.invalidateQueries({ queryKey: ['/api/focus/tasks'] });
+                        } catch (error) {
+                          console.error('Fehler beim Ändern des Fokus-Status:', error);
+                          toast({
+                            title: "Fehler",
+                            description: "Der Fokus-Status konnte nicht geändert werden.",
+                            variant: "destructive",
+                          });
+                        }
+                      }}
+                      title={suggestion.task?.inFocus ? "Fokus entfernen" : "Zu Fokus hinzufügen"}
+                    >
+                      <Star className={`h-4 w-4 ${suggestion.task?.inFocus ? 'fill-amber-500 text-amber-500' : ''}`} />
+                    </Button>
+                  </div>
                 </div>
               ) : (
                 <p className="text-sm text-muted-foreground">Aufgabe nicht gefunden</p>
