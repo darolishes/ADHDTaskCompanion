@@ -1,7 +1,10 @@
 import { 
   users, 
   tasks, 
-  taskSteps, 
+  taskSteps,
+  productivitySessions,
+  productivityAnalytics,
+  timeBlockPatterns,
   type User, 
   type InsertUser, 
   type Task, 
@@ -11,6 +14,15 @@ import {
   type TaskWithSteps,
   type EnergyLevel,
   type PriorityLevel,
+  type CategoryType,
+  type ProductivitySession,
+  type InsertProductivitySession,
+  type ProductivityAnalytic,
+  type InsertProductivityAnalytic,
+  type TimeBlockPattern,
+  type InsertTimeBlockPattern,
+  type ProductivityAnalyticsResponse,
+  type ProductivityMetadata,
 } from "@shared/schema";
 
 export interface IStorage {
@@ -23,6 +35,7 @@ export interface IStorage {
   getTasks(): Promise<Task[]>;
   getTasksByEnergyLevel(energyLevel: EnergyLevel): Promise<Task[]>;
   getTasksByPriority(priority: PriorityLevel): Promise<Task[]>;
+  getTasksByCategory(category: CategoryType): Promise<Task[]>;
   getTask(id: number): Promise<Task | undefined>;
   getTaskWithSteps(id: number): Promise<TaskWithSteps | undefined>;
   createTask(task: InsertTask): Promise<Task>;
@@ -34,23 +47,51 @@ export interface IStorage {
   createTaskStep(taskStep: InsertTaskStep): Promise<TaskStep>;
   updateTaskStep(id: number, taskStep: Partial<TaskStep>): Promise<TaskStep | undefined>;
   deleteTaskStep(id: number): Promise<boolean>;
+  
+  // Productivity Session operations
+  getProductivitySessions(userId: number): Promise<ProductivitySession[]>;
+  getProductivitySession(id: number): Promise<ProductivitySession | undefined>;
+  createProductivitySession(session: InsertProductivitySession): Promise<ProductivitySession>;
+  updateProductivitySession(id: number, session: Partial<ProductivitySession>): Promise<ProductivitySession | undefined>;
+  
+  // Productivity Analytics operations
+  getProductivityAnalytics(userId: number, timeframe: string): Promise<ProductivityAnalyticsResponse>;
+  updateProductivityAnalytics(userId: number, date: Date): Promise<void>;
+  
+  // Time Block Pattern operations
+  getTimeBlockPatterns(userId: number): Promise<TimeBlockPattern[]>;
+  getTimeBlockPattern(id: number): Promise<TimeBlockPattern | undefined>;
+  createTimeBlockPattern(timeBlock: InsertTimeBlockPattern): Promise<TimeBlockPattern>;
+  updateTimeBlockPattern(id: number, timeBlock: Partial<TimeBlockPattern>): Promise<TimeBlockPattern | undefined>;
 }
 
 export class MemStorage implements IStorage {
   private users: Map<number, User>;
   private tasks: Map<number, Task>;
   private taskSteps: Map<number, TaskStep>;
+  private productivitySessions: Map<number, ProductivitySession>;
+  private productivityAnalytics: Map<number, ProductivityAnalytic>;
+  private timeBlockPatterns: Map<number, TimeBlockPattern>;
   private userId: number;
   private taskId: number;
   private taskStepId: number;
+  private sessionId: number;
+  private analyticsId: number;
+  private timeBlockId: number;
 
   constructor() {
     this.users = new Map();
     this.tasks = new Map();
     this.taskSteps = new Map();
+    this.productivitySessions = new Map();
+    this.productivityAnalytics = new Map();
+    this.timeBlockPatterns = new Map();
     this.userId = 1;
     this.taskId = 1;
     this.taskStepId = 1;
+    this.sessionId = 1;
+    this.analyticsId = 1;
+    this.timeBlockId = 1;
   }
 
   // User operations

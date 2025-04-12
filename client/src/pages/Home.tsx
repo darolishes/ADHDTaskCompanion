@@ -285,30 +285,30 @@ export default function Home() {
                 <div className="flex gap-4 pb-4 px-2">
                   {/* Personal-Karte */}
                   <div 
-                    className="flex-shrink-0 w-[200px] bg-white rounded-xl shadow-md overflow-hidden cursor-pointer"
+                    className="flex-shrink-0 w-[250px] h-[280px] bg-white rounded-xl shadow-md overflow-hidden cursor-pointer"
                     onClick={() => handleSelectCategory('personal')}
                   >
-                    <div className="p-5">
-                      <div className="flex justify-between items-start mb-4">
-                        <div className="w-10 h-10 rounded-full bg-amber-100 flex items-center justify-center">
-                          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-amber-500" viewBox="0 0 20 20" fill="currentColor">
+                    <div className="p-6 h-full flex flex-col">
+                      <div className="flex justify-between items-start mb-5">
+                        <div className="w-12 h-12 rounded-full bg-amber-100 flex items-center justify-center">
+                          <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-amber-500" viewBox="0 0 20 20" fill="currentColor">
                             <path fillRule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clipRule="evenodd" />
                           </svg>
                         </div>
-                        <span className="w-7 h-7 flex items-center justify-center text-gray-400">
+                        <span className="w-8 h-8 flex items-center justify-center text-gray-400">
                           <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z" />
                           </svg>
                         </span>
                       </div>
                       
-                      <div className="mt-8 mb-4">
-                        <p className="text-sm font-medium text-gray-500">{uncompletedTasks.length} {uncompletedTasks.length === 1 ? 'task' : 'tasks'}</p>
-                        <h2 className="text-2xl font-bold">Personal</h2>
+                      <div className="mt-auto mb-6">
+                        <p className="text-sm font-medium text-gray-500 mb-1">{uncompletedTasks.length} {uncompletedTasks.length === 1 ? 'task' : 'tasks'}</p>
+                        <h2 className="text-3xl font-bold">Personal</h2>
                       </div>
                       
                       {/* Progress bar */}
-                      <div className="h-1 w-full bg-gray-200 rounded-full overflow-hidden">
+                      <div className="h-2 w-full bg-gray-200 rounded-full overflow-hidden">
                         <div 
                           className="h-full bg-amber-500 rounded-full"
                           style={{ width: `${uncompletedTasks.length > 0 ? 24 : 0}%` }}
@@ -319,31 +319,31 @@ export default function Home() {
                   
                   {/* Work-Karte */}
                   <div 
-                    className="flex-shrink-0 w-[200px] bg-white rounded-xl shadow-md overflow-hidden cursor-pointer"
+                    className="flex-shrink-0 w-[250px] h-[280px] bg-white rounded-xl shadow-md overflow-hidden cursor-pointer"
                     onClick={() => handleSelectCategory('work')}
                   >
-                    <div className="p-5">
-                      <div className="flex justify-between items-start mb-4">
-                        <div className="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center">
-                          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-blue-500" viewBox="0 0 20 20" fill="currentColor">
+                    <div className="p-6 h-full flex flex-col">
+                      <div className="flex justify-between items-start mb-5">
+                        <div className="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center">
+                          <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-blue-500" viewBox="0 0 20 20" fill="currentColor">
                             <path fillRule="evenodd" d="M6 6V5a3 3 0 013-3h2a3 3 0 013 3v1h2a2 2 0 012 2v3.57A22.952 22.952 0 0110 13a22.95 22.95 0 01-8-1.43V8a2 2 0 012-2h2zm2-1a1 1 0 011-1h2a1 1 0 011 1v1H8V5zm1 5a1 1 0 011-1h.01a1 1 0 110 2H10a1 1 0 01-1-1z" clipRule="evenodd" />
                             <path d="M2 13.692V16a2 2 0 002 2h12a2 2 0 002-2v-2.308A24.974 24.974 0 0110 15c-2.796 0-5.487-.46-8-1.308z" />
                           </svg>
                         </div>
-                        <span className="w-7 h-7 flex items-center justify-center text-gray-400">
+                        <span className="w-8 h-8 flex items-center justify-center text-gray-400">
                           <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z" />
                           </svg>
                         </span>
                       </div>
                       
-                      <div className="mt-8 mb-4">
-                        <p className="text-sm font-medium text-gray-500">0 tasks</p>
-                        <h2 className="text-2xl font-bold">Work</h2>
+                      <div className="mt-auto mb-6">
+                        <p className="text-sm font-medium text-gray-500 mb-1">0 tasks</p>
+                        <h2 className="text-3xl font-bold">Work</h2>
                       </div>
                       
                       {/* Progress bar */}
-                      <div className="h-1 w-full bg-gray-200 rounded-full overflow-hidden">
+                      <div className="h-2 w-full bg-gray-200 rounded-full overflow-hidden">
                         <div className="h-full bg-blue-500 rounded-full" style={{ width: '0%' }} />
                       </div>
                     </div>
