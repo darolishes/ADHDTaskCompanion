@@ -1,5 +1,5 @@
 {
-  "name": "adhd-task-companion",
+  "name": "adhd-companion",
   "private": true,
   "workspaces": [
     "apps/*",
