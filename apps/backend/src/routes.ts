@@ -7,7 +7,7 @@ import {
   getDailyFocusSuggestions,
   predictTaskEmoji,
   analyzeNaturalLanguageTask,
-} from "@focus-flow/ai-helpers";
+} from "@adhd/ai-helpers";
 import {
   insertTaskSchema,
   insertTaskStepSchema,
@@ -16,7 +16,7 @@ import {
   EnergyLevel,
   PriorityLevel,
   CategoryType,
-} from "@focus-flow/schema";
+} from "@adhd/schema";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // GET all tasks

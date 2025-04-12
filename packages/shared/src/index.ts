@@ -1,2 +1,2 @@
 // Export all types and schemas from the shared package
-export * from './schema';
+export * from '@adhd/schema';
