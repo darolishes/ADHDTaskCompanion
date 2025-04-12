@@ -39,7 +39,7 @@ export default function Home() {
   
   // Fokussierte Aufgaben (nur die, bei denen inFocus=true ist)
   const { data: focusedTasks = [] } = useQuery<TaskWithSteps[]>({
-    queryKey: ['/api/tasks/focused'],
+    queryKey: ['/api/focus/tasks'],
     staleTime: 10000,
   });
 
@@ -49,8 +49,35 @@ export default function Home() {
     enabled: focusTaskId !== null,
   });
 
+  // Aufgabe in den Detail-Fokus setzen (Ansicht öffnen)
   const handleFocusTask = (taskId: number) => {
     setFocusTaskId(taskId);
+  };
+  
+  // Aufgabe in den Aufgaben-Fokus setzen/entfernen (inFocus-Status umschalten)
+  const handleToggleTaskFocus = async (taskId: number) => {
+    try {
+      const result = await apiRequest('PATCH', `/api/tasks/${taskId}/focus`, {});
+      
+      // Benachrichtigung anzeigen
+      toast({
+        title: result.inFocus ? "Aufgabe fokussiert" : "Fokus entfernt",
+        description: result.inFocus 
+          ? "Die Aufgabe wurde in den Fokus gesetzt." 
+          : "Die Aufgabe wurde aus dem Fokus entfernt.",
+      });
+      
+      // Daten aktualisieren
+      queryClient.invalidateQueries({ queryKey: ['/api/tasks'] });
+      queryClient.invalidateQueries({ queryKey: ['/api/focus/tasks'] });
+    } catch (error) {
+      console.error('Fehler beim Ändern des Fokus-Status:', error);
+      toast({
+        title: "Fehler",
+        description: "Der Fokus-Status konnte nicht geändert werden.",
+        variant: "destructive",
+      });
+    }
   };
 
   const handleBackToTasks = () => {
@@ -239,6 +266,60 @@ export default function Home() {
               </div>
             </div>
 
+            {/* Fokussierte Aufgaben */}
+            {focusedTasks.length > 0 && (
+              <div className="mb-6">
+                <div className="flex items-center mb-2">
+                  <div className="w-5 h-5 flex-shrink-0 mr-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-amber-600">
+                      <path d="M12 2L15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2z" />
+                    </svg>
+                  </div>
+                  <h2 className="text-lg font-medium">Im Fokus</h2>
+                </div>
+                
+                <div className="space-y-2">
+                  {focusedTasks.map(task => (
+                    <div 
+                      key={task.id}
+                      className="relative overflow-hidden rounded-lg border border-amber-400 bg-amber-50 shadow-sm hover:border-amber-500 transition-colors cursor-pointer flex items-center"
+                    >
+                      <div 
+                        className="p-3 flex-1"
+                        onClick={() => handleFocusTask(task.id)}
+                      >
+                        <div className="flex items-center gap-1.5">
+                          <div 
+                            className={`w-2 h-2 rounded-full ${
+                              task.priority === 'high' ? 'bg-red-500' :
+                              task.priority === 'medium' ? 'bg-amber-500' : 'bg-green-500'
+                            }`} 
+                          />
+                          <span className="font-medium text-sm">{task.title}</span>
+                        </div>
+                        
+                        <div className="flex text-xs text-muted-foreground mt-0.5">
+                          <span>{task.estimatedDuration} min · {task.steps.length} Schritte</span>
+                        </div>
+                      </div>
+                      
+                      <div className="flex items-center pr-2">
+                        <button
+                          onClick={() => handleToggleTaskFocus(task.id)}
+                          className="p-1 rounded-full hover:bg-amber-200 transition-colors"
+                          title="Fokus entfernen"
+                        >
+                          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-amber-600" fill="currentColor" viewBox="0 0 24 24" stroke="currentColor">
+                            <path d="M12 2L15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2z" />
+                          </svg>
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+            
             <DailyFocusSuggestion
               currentEnergyLevel={currentEnergyLevel}
               onFocusTask={handleFocusTask}

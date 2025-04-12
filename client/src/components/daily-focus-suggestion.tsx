@@ -1,11 +1,13 @@
-import { useState, useEffect } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useState } from "react";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { TaskWithSteps, EnergyLevel } from "@shared/schema";
 import { Button } from "@/components/ui/button";
-import { Loader2, AlertCircle, CheckCircle2 } from "lucide-react";
+import { Loader2, AlertCircle, CheckCircle2, Star } from "lucide-react";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { getEnergyColor } from "@/lib/utils";
+import { useToast } from "@/hooks/use-toast";
+import { apiRequest } from "@/lib/queryClient";
 
 interface DailyFocusSuggestionProps {
   currentEnergyLevel: EnergyLevel;
@@ -25,6 +27,8 @@ interface FocusResponse {
 
 export function DailyFocusSuggestion({ currentEnergyLevel, onFocusTask }: DailyFocusSuggestionProps) {
   const [expanded, setExpanded] = useState(false);
+  const queryClient = useQueryClient();
+  const { toast } = useToast();
 
   const { data, isLoading, isError, error } = useQuery<FocusResponse>({
     queryKey: ['/api/focus/daily', currentEnergyLevel],

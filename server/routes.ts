@@ -472,7 +472,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
   
   // Fokussierte Aufgaben abrufen
-  app.get("/api/tasks/focused", async (req: Request, res: Response) => {
+  app.get("/api/focus/tasks", async (req: Request, res: Response) => {
     try {
       const allTasks = await storage.getTasks();
       const focusedTasks = await Promise.all(
