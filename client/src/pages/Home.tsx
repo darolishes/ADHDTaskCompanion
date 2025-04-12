@@ -285,7 +285,7 @@ export default function Home() {
                 <div className="flex gap-6 pb-6 px-2 justify-center">
                   {/* Personal-Karte */}
                   <div 
-                    className="flex-shrink-0 w-[300px] h-[560px] bg-white rounded-xl shadow-md overflow-hidden cursor-pointer"
+                    className="flex-shrink-0 w-[350px] h-[560px] bg-white rounded-xl shadow-md overflow-hidden cursor-pointer"
                     onClick={() => handleSelectCategory('personal')}
                   >
                     <div className="p-6 h-full flex flex-col">
@@ -302,9 +302,9 @@ export default function Home() {
                         </span>
                       </div>
                       
-                      <div className="mt-auto mb-6">
-                        <p className="text-sm font-medium text-gray-500 mb-1">{uncompletedTasks.length} {uncompletedTasks.length === 1 ? 'task' : 'tasks'}</p>
-                        <h2 className="text-4xl font-bold">Personal</h2>
+                      <div className="mt-auto mb-8">
+                        <p className="text-lg font-medium text-gray-500 mb-2">{uncompletedTasks.length} {uncompletedTasks.length === 1 ? 'task' : 'tasks'}</p>
+                        <h2 className="text-5xl font-bold">Personal</h2>
                       </div>
                       
                       {/* Progress bar */}
@@ -319,7 +319,7 @@ export default function Home() {
                   
                   {/* Work-Karte */}
                   <div 
-                    className="flex-shrink-0 w-[300px] h-[560px] bg-white rounded-xl shadow-md overflow-hidden cursor-pointer"
+                    className="flex-shrink-0 w-[350px] h-[560px] bg-white rounded-xl shadow-md overflow-hidden cursor-pointer"
                     onClick={() => handleSelectCategory('work')}
                   >
                     <div className="p-6 h-full flex flex-col">
@@ -337,9 +337,9 @@ export default function Home() {
                         </span>
                       </div>
                       
-                      <div className="mt-auto mb-6">
-                        <p className="text-sm font-medium text-gray-500 mb-1">0 tasks</p>
-                        <h2 className="text-3xl font-bold">Work</h2>
+                      <div className="mt-auto mb-8">
+                        <p className="text-lg font-medium text-gray-500 mb-2">0 tasks</p>
+                        <h2 className="text-5xl font-bold">Work</h2>
                       </div>
                       
                       {/* Progress bar */}
@@ -351,7 +351,7 @@ export default function Home() {
                   
                   {/* Family-Karte */}
                   <div 
-                    className="flex-shrink-0 w-[300px] h-[560px] bg-white rounded-xl shadow-md overflow-hidden cursor-pointer"
+                    className="flex-shrink-0 w-[350px] h-[560px] bg-white rounded-xl shadow-md overflow-hidden cursor-pointer"
                     onClick={() => handleSelectCategory('family')}
                   >
                     <div className="p-6 h-full flex flex-col">
@@ -368,9 +368,9 @@ export default function Home() {
                         </span>
                       </div>
                       
-                      <div className="mt-auto mb-6">
-                        <p className="text-sm font-medium text-gray-500 mb-1">0 tasks</p>
-                        <h2 className="text-3xl font-bold">Family</h2>
+                      <div className="mt-auto mb-8">
+                        <p className="text-lg font-medium text-gray-500 mb-2">0 tasks</p>
+                        <h2 className="text-5xl font-bold">Family</h2>
                       </div>
                       
                       {/* Progress bar */}
