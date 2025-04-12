@@ -3,7 +3,7 @@ import { useSpeechRecognition } from '@/hooks/use-speech-recognition';
 import { apiRequest } from '@/lib/queryClient';
 import { useToast } from '@/hooks/use-toast';
 import { useQueryClient } from '@tanstack/react-query';
-import { CreateTaskInput } from '@/types';
+import { CreateTaskInput, NLPTaskAnalysis } from '@/types';
 import { EmojiSelector } from './emoji-selector';
 
 interface TaskAddFormProps {
