@@ -280,9 +280,9 @@ export default function Home() {
             <div className="flex-grow"></div>
             
             {/* Kategorie-Cards im Hochformat als horizontaler Slider am unteren Rand */}
-            <div className={`fixed bottom-8 left-0 right-0 px-4 transition-all duration-500 ${animateIn ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
+            <div className={`fixed bottom-12 left-0 right-0 px-4 transition-all duration-500 ${animateIn ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
               <div className="overflow-x-auto">
-                <div className="flex gap-4 pb-4 px-2">
+                <div className="flex gap-6 pb-6 px-2 justify-center">
                   {/* Personal-Karte */}
                   <div 
                     className="flex-shrink-0 w-[250px] h-[280px] bg-white rounded-xl shadow-md overflow-hidden cursor-pointer"
@@ -351,30 +351,30 @@ export default function Home() {
                   
                   {/* Family-Karte */}
                   <div 
-                    className="flex-shrink-0 w-[200px] bg-white rounded-xl shadow-md overflow-hidden cursor-pointer"
+                    className="flex-shrink-0 w-[250px] h-[280px] bg-white rounded-xl shadow-md overflow-hidden cursor-pointer"
                     onClick={() => handleSelectCategory('family')}
                   >
-                    <div className="p-5">
-                      <div className="flex justify-between items-start mb-4">
-                        <div className="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center">
-                          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-green-500" viewBox="0 0 20 20" fill="currentColor">
+                    <div className="p-6 h-full flex flex-col">
+                      <div className="flex justify-between items-start mb-5">
+                        <div className="w-12 h-12 rounded-full bg-green-100 flex items-center justify-center">
+                          <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-green-500" viewBox="0 0 20 20" fill="currentColor">
                             <path d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3zM6 8a2 2 0 11-4 0 2 2 0 014 0zM16 18v-3a5.972 5.972 0 00-.75-2.906A3.005 3.005 0 0119 15v3h-3zM4.75 12.094A5.973 5.973 0 004 15v3H1v-3a3 3 0 013.75-2.906z" />
                           </svg>
                         </div>
-                        <span className="w-7 h-7 flex items-center justify-center text-gray-400">
+                        <span className="w-8 h-8 flex items-center justify-center text-gray-400">
                           <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z" />
                           </svg>
                         </span>
                       </div>
                       
-                      <div className="mt-8 mb-4">
-                        <p className="text-sm font-medium text-gray-500">0 tasks</p>
-                        <h2 className="text-2xl font-bold">Family</h2>
+                      <div className="mt-auto mb-6">
+                        <p className="text-sm font-medium text-gray-500 mb-1">0 tasks</p>
+                        <h2 className="text-3xl font-bold">Family</h2>
                       </div>
                       
                       {/* Progress bar */}
-                      <div className="h-1 w-full bg-gray-200 rounded-full overflow-hidden">
+                      <div className="h-2 w-full bg-gray-200 rounded-full overflow-hidden">
                         <div className="h-full bg-green-500 rounded-full" style={{ width: '0%' }} />
                       </div>
                     </div>
