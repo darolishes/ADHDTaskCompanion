@@ -1,5 +1,5 @@
 modules = ["nodejs-20", "web", "postgresql-16"]
-run = "npm run dev"
+run = "pnpm run dev"
 hidden = [".config", ".git", "generated-icon.png", "node_modules", "dist"]
 
 [nix]
@@ -7,7 +7,7 @@ channel = "stable-24_05"
 
 [deployment]
 deploymentTarget = "autoscale"
-build = ["sh", "-c", "npm run build"]
+build = ["sh", "-c", "pnpm run build"]
 run = ["sh", "-c", "node apps/backend/dist/index.js"]
 
 [[ports]]
@@ -38,7 +38,7 @@ task = "packager.installForAll"
 
 [[workflows.workflow.tasks]]
 task = "shell.exec"
-args = "npm run dev"
+args = "pnpm run dev"
 waitForPort = 5000
 
 [[workflows.workflow]]
@@ -48,8 +48,8 @@ mode = "parallel"
 
 [[workflows.workflow.tasks]]
 task = "shell.exec"
-args = "cd apps/backend && npm run dev"
+args = "cd apps/backend && pnpm run dev"
 
 [[workflows.workflow.tasks]]
 task = "shell.exec"
-args = "cd apps/frontend && npm run dev"
+args = "cd apps/frontend && pnpm run dev"
