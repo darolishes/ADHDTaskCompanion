@@ -281,12 +281,13 @@ export default function Home() {
             
             {/* Kategorie-Cards im Hochformat als horizontaler Slider am unteren Rand */}
             <div className={`fixed bottom-12 left-0 right-0 px-4 transition-all duration-500 ${animateIn ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
-              <div className="overflow-x-auto">
-                <div className="flex gap-6 pb-6 px-2 justify-center">
+              <div className="overflow-x-auto pb-4 -mx-4 px-4" style={{ scrollSnapType: 'x mandatory', WebkitOverflowScrolling: 'touch' }}>
+                <div className="flex gap-8 pb-6 px-2 justify-start">
                   {/* Personal-Karte */}
                   <div 
                     className="flex-shrink-0 w-[350px] h-[560px] bg-white rounded-xl shadow-md overflow-hidden cursor-pointer"
                     onClick={() => handleSelectCategory('personal')}
+                    style={{ scrollSnapAlign: 'center' }}
                   >
                     <div className="p-6 h-full flex flex-col">
                       <div className="flex justify-between items-start mb-5">
@@ -321,6 +322,7 @@ export default function Home() {
                   <div 
                     className="flex-shrink-0 w-[350px] h-[560px] bg-white rounded-xl shadow-md overflow-hidden cursor-pointer"
                     onClick={() => handleSelectCategory('work')}
+                    style={{ scrollSnapAlign: 'center' }}
                   >
                     <div className="p-6 h-full flex flex-col">
                       <div className="flex justify-between items-start mb-5">
@@ -353,6 +355,7 @@ export default function Home() {
                   <div 
                     className="flex-shrink-0 w-[350px] h-[560px] bg-white rounded-xl shadow-md overflow-hidden cursor-pointer"
                     onClick={() => handleSelectCategory('family')}
+                    style={{ scrollSnapAlign: 'center' }}
                   >
                     <div className="p-6 h-full flex flex-col">
                       <div className="flex justify-between items-start mb-5">
