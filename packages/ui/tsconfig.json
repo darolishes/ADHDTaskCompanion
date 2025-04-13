@@ -1,11 +1,5 @@
 {
-  "extends": "../../tsconfig.base.json",
-  "compilerOptions": {
-    "outDir": "./dist",
-    "rootDir": "./src"
-  },
-  "include": ["src/**/*"],
-  "references": [
-    { "path": "../schema" }
-  ]
+  "extends": "@repo/typescript-config/react-library.json",
+  "include": ["src"],
+  "exclude": ["dist", "build", "node_modules"]
 }

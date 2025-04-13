@@ -16,7 +16,7 @@ import {
   EnergyLevel,
   PriorityLevel,
   CategoryType,
-} from "@adhd/schema";
+} from "./schema";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // GET all tasks

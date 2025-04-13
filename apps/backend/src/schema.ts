@@ -97,7 +97,7 @@ export interface TimeBlock {
   id: number;
   timeBlockPatternId: number;
   startTime: string; // Format "HH:MM"
-  endTime: string; // Format "HH:MM" 
+  endTime: string; // Format "HH:MM"
   activityType: ActivityType;
   energyLevel: EnergyLevel;
 }
@@ -190,9 +190,13 @@ export const insertUserSchema = z.object({
 export const insertTaskSchema = z.object({
   title: z.string().min(1, "Task title is required"),
   description: z.string().nullable().optional(),
-  priority: z.enum([PriorityLevel.LOW, PriorityLevel.MEDIUM, PriorityLevel.HIGH])
+  priority: z
+    .enum([PriorityLevel.LOW, PriorityLevel.MEDIUM, PriorityLevel.HIGH])
     .default(PriorityLevel.MEDIUM),
-  energyLevel: z.enum([EnergyLevel.LOW, EnergyLevel.MEDIUM, EnergyLevel.HIGH]).nullable().optional(),
+  energyLevel: z
+    .enum([EnergyLevel.LOW, EnergyLevel.MEDIUM, EnergyLevel.HIGH])
+    .nullable()
+    .optional(),
   estimatedDuration: z.number().positive().nullable().optional(),
   actualDuration: z.number().positive().nullable().optional(),
   completed: z.boolean().default(false),
@@ -200,12 +204,14 @@ export const insertTaskSchema = z.object({
   userId: z.number().nullable().optional(),
   createdAt: z.date().default(() => new Date()),
   dueDate: z.date().nullable().optional(),
-  category: z.enum([
-    CategoryType.PERSONAL, 
-    CategoryType.WORK, 
-    CategoryType.FAMILY, 
-    CategoryType.HEALTH
-  ]).default(CategoryType.PERSONAL),
+  category: z
+    .enum([
+      CategoryType.PERSONAL,
+      CategoryType.WORK,
+      CategoryType.FAMILY,
+      CategoryType.HEALTH,
+    ])
+    .default(CategoryType.PERSONAL),
   emoji: z.string().max(4).optional(),
   inFocus: z.boolean().default(false),
 });
@@ -225,8 +231,14 @@ export const insertProductivitySessionSchema = z.object({
   startTime: z.date(),
   endTime: z.date().nullable().optional(),
   duration: z.number().nullable().optional(),
-  energyLevelBefore: z.enum([EnergyLevel.LOW, EnergyLevel.MEDIUM, EnergyLevel.HIGH]).nullable().optional(),
-  energyLevelAfter: z.enum([EnergyLevel.LOW, EnergyLevel.MEDIUM, EnergyLevel.HIGH]).nullable().optional(),
+  energyLevelBefore: z
+    .enum([EnergyLevel.LOW, EnergyLevel.MEDIUM, EnergyLevel.HIGH])
+    .nullable()
+    .optional(),
+  energyLevelAfter: z
+    .enum([EnergyLevel.LOW, EnergyLevel.MEDIUM, EnergyLevel.HIGH])
+    .nullable()
+    .optional(),
   interruptions: z.number().nonnegative().nullable().optional(),
   productivityScore: z.number().min(1).max(10).nullable().optional(),
   notes: z.string().nullable().optional(),
@@ -247,14 +259,22 @@ export const insertProductivityAnalyticSchema = z.object({
 export const insertTimeBlockPatternSchema = z.object({
   userId: z.number(),
   name: z.string().min(1),
-  blocks: z.array(z.object({
-    id: z.number().optional(),
-    timeBlockPatternId: z.number().optional(),
-    startTime: z.string().regex(/^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/),
-    endTime: z.string().regex(/^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/),
-    activityType: z.enum(Object.values(ActivityType) as [string, ...string[]]),
-    energyLevel: z.enum([EnergyLevel.LOW, EnergyLevel.MEDIUM, EnergyLevel.HIGH]),
-  })),
+  blocks: z.array(
+    z.object({
+      id: z.number().optional(),
+      timeBlockPatternId: z.number().optional(),
+      startTime: z.string().regex(/^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/),
+      endTime: z.string().regex(/^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/),
+      activityType: z.enum(
+        Object.values(ActivityType) as [string, ...string[]]
+      ),
+      energyLevel: z.enum([
+        EnergyLevel.LOW,
+        EnergyLevel.MEDIUM,
+        EnergyLevel.HIGH,
+      ]),
+    })
+  ),
   isDefault: z.boolean().default(false),
 });
 
