@@ -1,26 +1,24 @@
-# Turborepo Tailwind CSS starter
+# ADHD Companion
 
-This Turborepo starter is maintained by the Turborepo core team.
+A comprehensive application to help individuals with ADHD manage tasks and improve productivity.
 
-## Using this example
+## Project Structure
 
-Run the following command:
+This project is organized as a monorepo using Turborepo with the following structure:
 
-```sh
-npx create-turbo@latest -e with-tailwind
-```
+### Apps (@apps)
 
-## What's inside?
+- **@apps/docs**: Documentation site
+- **@apps/backend**: Backend API
+- **@apps/native**: Mobile app
 
-This Turborepo includes the following packages/apps:
+### Packages (@packages)
 
-### Apps and Packages
-
-- `docs`: a [Next.js](https://nextjs.org/) app with [Tailwind CSS](https://tailwindcss.com/)
-- `web`: another [Next.js](https://nextjs.org/) app with [Tailwind CSS](https://tailwindcss.com/)
-- `ui`: a stub React component library with [Tailwind CSS](https://tailwindcss.com/) shared by both `web` and `docs` applications
-- `@repo/eslint-config`: `eslint` configurations (includes `eslint-config-next` and `eslint-config-prettier`)
-- `@repo/typescript-config`: `tsconfig.json`s used throughout the monorepo
+- **@packages/ui**: Shared UI components
+- **@packages/shared**: Shared business logic and types
+- **@packages/eslint-config**: ESLint configuration
+- **@packages/tailwind-config**: Tailwind configuration
+- **@packages/typescript-config**: TypeScript configuration
 
 Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
 
@@ -50,9 +48,70 @@ If you choose this strategy, you can remove the `tailwindcss` and `autoprefixer`
 
 ### Utilities
 
-This Turborepo has some additional tools already setup for you:
+This project has the following tools set up:
 
 - [Tailwind CSS](https://tailwindcss.com/) for styles
 - [TypeScript](https://www.typescriptlang.org/) for static type checking
 - [ESLint](https://eslint.org/) for code linting
 - [Prettier](https://prettier.io) for code formatting
+- [Storybook](https://storybook.js.org/) for UI component development
+
+## Development
+
+```bash
+# Install dependencies
+pnpm install
+
+# Start development servers
+pnpm dev
+
+# Build all packages and apps
+pnpm build
+
+# Lint all packages and apps
+pnpm lint
+
+# Type check all packages and apps
+pnpm check-types
+```
+
+## Storybook
+
+The UI components can be viewed and tested in Storybook:
+
+```bash
+# Start Storybook
+pnpm storybook
+
+# Build Storybook
+pnpm build-storybook
+```
+
+## Project Guidelines
+
+### Naming Conventions
+
+- Use kebab-case for file names
+- Use PascalCase for component names
+- Use camelCase for variables and functions
+
+### Import Structure
+
+The project uses TypeScript path aliases for cleaner imports:
+
+```typescript
+// Import from apps
+import { something } from "@apps/backend/feature";
+
+// Import from packages
+import { Button } from "@packages/ui/components";
+import { Task } from "@packages/shared/types";
+```
+
+### Adding New Features
+
+1. Determine if the feature belongs in an app or a package
+2. If it's shared functionality, consider adding it to the appropriate package
+3. Update types in @packages/shared if needed
+4. Add tests for new functionality
+5. Document the feature in the docs app if necessary

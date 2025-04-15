@@ -1,0 +1,306 @@
+# Augment Guidelines for ADHD Companion
+
+## Project Overview
+
+ADHD Companion is a comprehensive application designed to help individuals with ADHD manage tasks and improve productivity. The project is structured as a monorepo using Turborepo.
+
+### Project Structure
+
+#### Apps (@apps)
+
+- **@apps/docs**: Documentation site
+- **@apps/backend**: Backend API
+- **@apps/native**: Mobile app
+
+#### Packages (@packages)
+
+- **@packages/ui**: Shared UI components
+- **@packages/shared**: Shared business logic and types
+- **@packages/eslint-config**: ESLint configuration
+- **@packages/tailwind-config**: Tailwind configuration
+- **@packages/typescript-config**: TypeScript configuration
+
+### Key Technologies
+
+- TypeScript for type safety
+- Tailwind CSS for styling
+- Storybook for UI component development
+- Turborepo for monorepo management
+
+## Core Workflow Rules
+
+1. When coming online, first check if a .ai/stories/\*.md file exists with the highest sequence number and review the story to understand the current phase of the project.
+2. Always ensure a .ai/prd.md file exists. If not, work with the user to create one to understand the project scope.
+3. If the PRD is not `status: approved`, focus only on helping improve the .ai/prd.md file to ensure it includes:
+   - Detailed purpose, problems solved, and task sequence
+   - Architecture patterns and key technical decisions with mermaid diagrams
+   - Technologies, setup, and constraints
+   - Unknowns, assumptions, and risks
+4. Once the .ai/prd.md file is approved, generate the architecture document .ai/arch.md draft which also needs approval.
+5. After the architecture document is approved, create the draft of the first story in the .ai/stories folder.
+6. Always use the story template for new stories. Name them as epic-{n}-story-{m}.md in the .ai/stories folder.
+7. ALWAYS wait for the user to mark the story status as approved before doing ANY work outside of the story file.
+8. Run tests and ensure they pass before moving to the next subtask within a story.
+9. Update the story file as subtasks are completed.
+10. Once a Story is complete, generate a draft of the next story and wait for approval before proceeding.
+
+## Story Structure
+
+Stories should follow this structure:
+
+```markdown
+# {Epic-N} - {Story-#}
+
+{Story Title}
+
+**As a** {role}
+**I want** {action}
+**so that** {benefit}
+
+## Status
+
+{Draft|In Progress|Complete}
+
+## Context
+
+- Background information
+- Current state
+- Story justification
+- Technical context
+- Business drivers
+- Relevant history from previous stories
+
+## Estimation
+
+Story Points: {Story Points (1 SP = 1 day of Human Development = 10 minutes of AI development)}
+
+## Tasks
+
+1. - [ ] {Major Task Group 1}
+   1. - [ ] {Test Subtasks (as needed)}
+   2. - [ ] {Subtask}
+
+## Constraints
+
+- List any technical or business constraints
+
+## Data Models / Schema
+
+- Database schemas
+- API request/response models
+- Interfaces/types
+
+## Structure
+
+- Module organization
+- File structure plan
+
+## Diagrams
+
+- Mermaid diagrams as needed
+
+## Dev Notes
+
+- Implementation commentary
+- Important considerations
+- Technical decisions made or changed
+
+## Chat Command Log
+
+- Commands from User
+- Agent Question and Users Response
+```
+
+## Development Guidelines
+
+- Update story files as subtasks are completed.
+- If unsure of the next step, ask the user for clarification, and update the story as needed to maintain a clear memory of decisions.
+- Reference the .ai/arch.md if the story implementation needs additional technical documentation.
+- When prompted with 'update story', update the current story to:
+  - Reflect the current state
+  - Clarify next steps
+  - Ensure the chat log is up to date with any interactions
+- A story is not complete unless ALL tests have been run and verified to pass.
+- Do not mark a story as complete unless all tests pass.
+
+## Actions That Don't Require Permission
+
+1. Create the story file to be worked on next if none exist.
+2. Run unit tests during development until they pass.
+3. Update the story acceptance criteria and tasks as they are completed.
+4. Update the story file with the chat log or other updates to retain memory of the story status.
+
+## Role-Specific Guidelines
+
+### Project Manager
+
+- Focus on creating and maintaining detailed Product Requirements Documents (PRD) and user stories.
+- Only create or modify files in .ai/prd.md or .ai/stories/\*.md.
+- Ask detailed, clarifying questions to capture all requirements.
+- Create a comprehensive PRD that lists an ordered backlog of user stories.
+
+### Solutions Architect
+
+- Translate PRDs into comprehensive architecture documents.
+- Create documentation covering technology stack choices, system interactions, and data models using Mermaid diagrams.
+- Work exclusively within the .ai folder (arch.md and related files).
+- Consider security, scalability, maintainability, and best practices in architectural decisions.
+
+### Developer (Frontend/Backend/Fullstack)
+
+- Implement current in-progress user stories from the .ai/stories folder.
+- Follow architecture and PRD guidelines.
+- Maintain high standards for code quality and test coverage.
+- Update story files as subtasks are completed.
+
+### QA Analyst
+
+- Focus on code review and E2E test creation.
+- Maintain high standards for code quality and test coverage.
+- Check the .ai/stories folder for in-progress stories before starting work.
+
+## TypeScript Development Guidelines
+
+### Type Safety
+
+- Use strict TypeScript configuration (`"strict": true`)
+- Never use 'any' type - use `unknown` for truly unknown types
+- Use explicit return types for functions and methods
+- Avoid type assertions (as) unless absolutely necessary
+- Use type guards for runtime type checking
+- Leverage union and intersection types
+- Use branded types for domain-specific identifiers
+- Implement proper null/undefined handling
+- Use the Result/Either pattern for operations that can fail
+
+### Code Organization
+
+- Follow Single Responsibility Principle
+- Keep functions focused and small
+- Extract reusable code into utilities
+- Organize by feature, not by type
+- Separate business logic from UI components
+- Use interfaces for object definitions that may be extended
+- Use type for unions/intersections/utility types
+- Prefer composition over inheritance
+
+### Naming Conventions
+
+- Use PascalCase for React components, interfaces, types, enums, and classes
+- Use camelCase for variables and functions
+- Use verb prefixes for functions (get, set, fetch, etc.)
+- Use UPPER_SNAKE_CASE for true constants
+- Prefix private class members with underscore (\_)
+- Use Boolean prefixes like is, has, should for Booleans
+
+### File Naming and Structure
+
+- Use single-word, lowercase names for all files
+- One component/feature per file
+- Use .tsx for React components
+- Use .ts for other TypeScript files
+- Use semantic directory structure (components/, screens/, hooks/, utils/)
+
+### Import Organization
+
+- Group imports in this order:
+  1. External libraries
+  2. Internal aliases (@paths)
+  3. Relative imports
+  4. Type imports
+- Add blank line between groups
+- Sort alphabetically within groups
+- Use aliases instead of deep relative paths
+- Use named imports where possible
+- Use type imports for types only
+
+## Application Development Guidelines
+
+### Backend Development (@apps/backend)
+
+- Use a layered architecture with clear separation of concerns
+- Implement proper error handling and logging for all API endpoints
+- Create comprehensive API documentation using OpenAPI/Swagger
+- Write unit tests for all business logic
+- Use environment variables for configuration
+- Implement proper authentication and authorization
+- Follow RESTful API design principles
+- Use dependency injection for services to improve testability
+
+### Mobile App Development (@apps/native)
+
+- Follow React Native best practices for performance optimization
+- Implement proper error boundaries to prevent app crashes
+- Use React Navigation for routing and navigation
+- Implement proper form validation
+- Create reusable hooks for common functionality
+- Implement proper state management using React Context or Redux
+- Support both light and dark themes
+- Ensure accessibility compliance
+
+### Documentation Site (@apps/docs)
+
+- Keep documentation up-to-date with the latest features
+- Include code examples for common use cases
+- Document API endpoints with request/response examples
+- Include troubleshooting guides
+- Provide clear installation and setup instructions
+- Document component props and usage examples
+
+### Database and Data Management
+
+- Use a consistent data modeling approach
+- Implement proper data validation
+- Create indexes for frequently queried fields
+- Use transactions for operations that require atomicity
+- Implement proper error handling for database operations
+- Document database schema and relationships
+- Implement data migration strategies
+
+### Development Workflow
+
+- Use feature branches for new development
+- Write comprehensive tests for new features
+- Document new features in the docs app
+- Use pull requests for code reviews
+- Ensure CI/CD pipeline passes before merging
+- Keep dependencies up-to-date
+- Use semantic versioning for releases
+
+## UI Component Development with Storybook
+
+- Use Storybook for developing and documenting UI components
+- Create stories for all reusable UI components in the @packages/ui package
+- Follow the Turborepo documentation approach for Storybook in monorepo projects
+- Document component props, variants, and usage examples in stories
+- Use Storybook controls to demonstrate component variations
+- Test components in different viewport sizes using Storybook's viewport addon
+- Extract repeated Tailwind className patterns into custom components or utility classes
+- Avoid nested divs with complex className strings to improve code readability
+
+## AI-Related Development Guidelines
+
+- Keep AI-related code in the backend package
+- Provide configuration options for AI providers to enhance flexibility
+- Use dependency injection for AI services to allow for easy switching between providers
+- Implement proper error handling for AI service calls
+- Add appropriate logging for AI-related operations
+- Create abstractions for AI services to decouple the implementation details
+- Document AI service capabilities and limitations
+
+## Monorepo Development Guidelines
+
+- Use Turborepo's pipeline configuration in turbo.json for defining dependencies between tasks
+- Leverage workspace dependencies for sharing code between packages
+- Use consistent versioning across all packages
+- Avoid circular dependencies between packages
+- Keep packages focused on a single responsibility
+- Use remote caching when possible to speed up builds
+- Document package APIs and their usage
+
+## Critical Memory System Rules
+
+- All retention of what is planned, completed, or changed will be recorded in the .ai folder.
+- Keep information in the .ai folder up to date and of high quality.
+- When unsure, reference the PRD, architecture document, current and previous stories.
+- If still unsure after checking documentation, ask the user for help rather than guessing.

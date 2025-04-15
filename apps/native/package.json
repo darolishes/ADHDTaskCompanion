@@ -1,5 +1,5 @@
 {
-  "name": "native-app",
+  "name": "@apps/native",
   "version": "1.0.0",
   "main": "index.tsx",
   "scripts": {
@@ -12,7 +12,9 @@
   "dependencies": {
     "@clerk/clerk-expo": "^2.7.7",
     "@expo/vector-icons": "^14.0.2",
-    "@packages/backend": "*",
+    "@apps/backend": "workspace:*",
+    "@packages/shared": "workspace:*",
+    "@packages/ui": "workspace:*",
     "@react-navigation/bottom-tabs": "^7.2.0",
     "@react-navigation/native": "^7.0.14",
     "@react-navigation/native-stack": "^7.2.0",

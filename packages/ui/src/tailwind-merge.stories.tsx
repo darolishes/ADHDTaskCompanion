@@ -108,7 +108,7 @@ export const Examples: Story = {
       <div>
         <h3 className="text-lg font-medium mb-2">Basic Usage</h3>
         <pre className="p-2 bg-gray-100 rounded text-sm overflow-auto">
-          {`import { cn } from "@repo/ui";
+          {`import { cn } from "@packages/ui";
 
 <div className={cn("base-classes", condition && "conditional-classes")}>
   Content

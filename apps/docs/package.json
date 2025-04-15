@@ -1,5 +1,5 @@
 {
-  "name": "docs",
+  "name": "@apps/docs",
   "version": "1.0.0",
   "type": "module",
   "private": true,
@@ -11,16 +11,16 @@
     "check-types": "tsc --noEmit"
   },
   "dependencies": {
-    "@repo/ui": "workspace:*",
+    "@packages/ui": "workspace:*",
     "next": "^15.2.1",
     "react": "^19.1.0",
     "react-dom": "^19.1.0"
   },
   "devDependencies": {
     "@next/eslint-plugin-next": "^15.2.4",
-    "@repo/eslint-config": "workspace:*",
-    "@repo/tailwind-config": "workspace:*",
-    "@repo/typescript-config": "workspace:*",
+    "@packages/eslint-config": "workspace:*",
+    "@packages/tailwind-config": "workspace:*",
+    "@packages/typescript-config": "workspace:*",
     "@types/node": "^22.14.0",
     "@types/react": "^19.1.0",
     "@types/react-dom": "^19.1.1",
