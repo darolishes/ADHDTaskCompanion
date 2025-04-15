@@ -6,7 +6,10 @@
     "dev": "turbo run dev",
     "lint": "turbo run lint",
     "check-types": "turbo run check-types",
-    "format": "prettier --write \"**/*.{ts,tsx,md}\""
+    "format": "prettier --write \"**/*.{ts,tsx,md}\"",
+    "storybook": "turbo run storybook --filter=@repo/ui",
+    "build-storybook": "turbo run build-storybook --filter=@repo/ui",
+    "ui-preview": "turbo run preview --filter=@repo/ui"
   },
   "devDependencies": {
     "prettier": "^3.5.3",

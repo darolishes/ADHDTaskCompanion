@@ -16,7 +16,10 @@
     "build": "tailwindcss -i ./src/styles.css -o ./dist/index.css",
     "check-types": "tsc --noEmit",
     "dev": "tailwindcss -i ./src/styles.css -o ./dist/index.css --watch",
-    "lint": "eslint src --max-warnings 0"
+    "lint": "eslint src --max-warnings 0",
+    "storybook": "node scripts/start-storybook.js",
+    "build-storybook": "webpack --config .storybook/webpack.config.js --output-path storybook-static",
+    "preview": "node scripts/serve-preview.js"
   },
   "peerDependencies": {
     "react": "^19"
@@ -25,10 +28,18 @@
     "@repo/eslint-config": "workspace:*",
     "@repo/tailwind-config": "workspace:*",
     "@repo/typescript-config": "workspace:*",
+    "@storybook/addon-essentials": "^7.6.17",
+    "@storybook/addon-interactions": "^7.6.17",
+    "@storybook/addon-links": "^7.6.17",
+    "@storybook/blocks": "^7.6.17",
+    "@storybook/react": "^7.6.17",
+    "@storybook/react-webpack5": "^7.6.17",
+    "@storybook/test": "^7.6.17",
     "@types/react": "^19.1.0",
     "autoprefixer": "^10.4.20",
     "eslint": "^9.24.0",
     "postcss": "^8.5.3",
+    "storybook": "^7.6.17",
     "tailwindcss": "^3.4.17",
     "typescript": "5.8.2"
   }

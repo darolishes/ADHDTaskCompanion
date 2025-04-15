@@ -6,89 +6,89 @@
   :root {
     --background: 210 25% 98%;
     --foreground: 220 15% 12%;
-    
+
     --card: 0 0% 100%;
     --card-foreground: 220 15% 12%;
-    
+
     --popover: 0 0% 100%;
     --popover-foreground: 220 15% 12%;
-    
+
     --primary: 251 80% 55%;
     --primary-foreground: 0 0% 100%;
-    
+
     --secondary: 170 85% 65%;
     --secondary-foreground: 220 15% 12%;
-    
+
     --muted: 210 25% 96%;
     --muted-foreground: 220 15% 40%;
-    
+
     --accent: 251 80% 96%;
     --accent-foreground: 251 80% 55%;
-    
+
     --destructive: 0 90% 65%;
     --destructive-foreground: 0 0% 100%;
-    
+
     --border: 220 15% 92%;
 
-@keyframes fadeInScale {
-  from {
-    opacity: 0;
-    transform: scale(0.95);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1);
-  }
-}
+    @keyframes fadeInScale {
+      from {
+        opacity: 0;
+        transform: scale(0.95);
+      }
+      to {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
 
-.focus-mode-enter {
-  animation: fadeInScale 0.3s ease-out forwards;
-}
+    .focus-mode-enter {
+      animation: fadeInScale 0.3s ease-out forwards;
+    }
 
     --input: 220 15% 92%;
     --ring: 251 80% 55%;
-    
+
     --radius: 0.875rem;
   }
-  
+
   .dark {
     --background: 220 15% 9%;
     --foreground: 210 25% 98%;
-    
+
     --card: 220 15% 13%;
     --card-foreground: 210 25% 98%;
-    
+
     --popover: 220 15% 13%;
     --popover-foreground: 210 25% 98%;
-    
+
     --primary: 251 80% 65%;
     --primary-foreground: 0 0% 100%;
-    
+
     --secondary: 170 85% 35%;
     --secondary-foreground: 0 0% 100%;
-    
+
     --muted: 220 15% 18%;
     --muted-foreground: 210 25% 75%;
-    
+
     --accent: 251 80% 25%;
     --accent-foreground: 251 80% 75%;
-    
+
     --destructive: 0 90% 65%;
     --destructive-foreground: 0 0% 100%;
-    
+
     --border: 220 15% 22%;
     --input: 220 15% 22%;
     --ring: 251 80% 65%;
   }
-  
+
   * {
     @apply border-border;
   }
-  
+
   body {
     @apply font-sans antialiased bg-background text-foreground;
   }
-  
+
   /* Improved focus styles for accessibility */
   :focus-visible {
     @apply outline-none ring-2 ring-primary ring-offset-2 ring-offset-background;
@@ -100,54 +100,159 @@
   .task-item:hover .task-checkbox {
     @apply scale-105;
   }
-  
+
   .task-item .focus-btn {
     @apply opacity-0 transform translate-y-1;
   }
-  
+
   .task-item:hover .focus-btn {
     @apply opacity-100 translate-y-0;
   }
-  
+
   /* Energy level badges */
   .energy-badge {
     @apply flex items-center text-xs px-2 py-0.5 rounded-full;
   }
-  
+
   .energy-badge-high {
     @apply bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400;
   }
-  
+
   .energy-badge-medium {
     @apply bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400;
   }
-  
+
   .energy-badge-low {
     @apply bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400;
   }
-  
+
   /* Form styles */
   .form-input-wrapper {
     @apply relative transition-all duration-200;
   }
-  
+
   .form-input-wrapper:focus-within {
     @apply ring-2 ring-primary/20 rounded-lg;
   }
-  
+
+  /* Card components */
+  .card-base {
+    @apply rounded-lg border border-border bg-card text-card-foreground shadow-sm;
+  }
+
+  .card-interactive {
+    @apply card-base transition-all duration-300 hover:shadow-md hover:border-primary/20 hover:bg-accent/5;
+  }
+
+  /* Layout components */
+  .flex-center {
+    @apply flex items-center justify-center;
+  }
+
+  .flex-between {
+    @apply flex items-center justify-between;
+  }
+
+  /* Task components */
+  .task-container {
+    @apply relative overflow-hidden p-4 rounded-lg border border-border bg-card shadow-sm transition-all duration-300;
+  }
+
+  .task-container-interactive {
+    @apply task-container hover:shadow-md hover:border-primary/20 hover:bg-accent/5;
+  }
+
+  .task-title {
+    @apply font-medium text-sm truncate;
+  }
+
+  .task-metadata {
+    @apply flex items-center text-xs text-muted-foreground;
+  }
+
+  .task-action-button {
+    @apply p-1.5 rounded-full text-muted-foreground hover:text-primary hover:bg-muted transition-colors;
+  }
+
+  .task-checkbox-base {
+    @apply w-5 h-5 rounded-full flex items-center justify-center transition-colors;
+  }
+
+  .task-checkbox-unchecked {
+    @apply task-checkbox-base border-2 border-muted-foreground/40 hover:border-primary;
+  }
+
+  .task-checkbox-checked {
+    @apply task-checkbox-base bg-primary border-0;
+  }
+
+  /* Task step components */
+  .task-step {
+    @apply flex items-center p-2 rounded-lg transition-all;
+  }
+
+  .task-step-completed {
+    @apply text-gray-400;
+  }
+
+  .task-step-current {
+    @apply text-gray-900;
+  }
+
+  .task-step-upcoming {
+    @apply text-gray-500;
+  }
+
+  .task-step-indicator {
+    @apply w-6 h-6 rounded-full flex items-center justify-center mr-3;
+  }
+
+  .task-step-indicator-completed {
+    @apply bg-primary border-0 text-white;
+  }
+
+  .task-step-indicator-current {
+    @apply border-2 border-primary;
+  }
+
+  .task-step-indicator-upcoming {
+    @apply border-2 border-gray-300;
+  }
+
+  .task-step-text {
+    @apply text-sm flex-1;
+  }
+
+  .task-step-text-completed {
+    @apply line-through text-gray-400;
+  }
+
+  .task-step-text-current {
+    @apply font-medium;
+  }
+
+  /* Loading states */
+  .loading-spinner {
+    @apply w-12 h-12 rounded-full border-t-2 border-b-2 border-primary animate-spin;
+  }
+
+  .loading-text {
+    @apply text-muted-foreground animate-pulse;
+  }
+
   /* Page transitions */
   .page-transition-enter {
     @apply opacity-0 transform translate-y-4;
   }
-  
+
   .page-transition-enter-active {
     @apply opacity-100 transform translate-y-0 transition-all duration-300 ease-out;
   }
-  
+
   .page-transition-exit {
     @apply opacity-100 transform translate-y-0;
   }
-  
+
   .page-transition-exit-active {
     @apply opacity-0 transform -translate-y-4 transition-all duration-200 ease-in;
   }
@@ -155,37 +260,64 @@
 
 /* Animation definitions */
 @keyframes fadeIn {
-  0% { opacity: 0; }
-  100% { opacity: 1; }
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
 }
 
 @keyframes slideUp {
-  0% { transform: translateY(20px); opacity: 0; }
-  100% { transform: translateY(0); opacity: 1; }
+  0% {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
 }
 
 @keyframes slideInRight {
-  0% { transform: translateX(20px); opacity: 0; }
-  100% { transform: translateX(0); opacity: 1; }
+  0% {
+    transform: translateX(20px);
+    opacity: 0;
+  }
+  100% {
+    transform: translateX(0);
+    opacity: 1;
+  }
 }
 
 @keyframes slideInLeft {
-  0% { transform: translateX(-20px); opacity: 0; }
-  100% { transform: translateX(0); opacity: 1; }
+  0% {
+    transform: translateX(-20px);
+    opacity: 0;
+  }
+  100% {
+    transform: translateX(0);
+    opacity: 1;
+  }
 }
 
 @keyframes pulseLight {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.7; }
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
 }
 
 @keyframes task-enter {
-  from { 
-    transform: translateY(15px) scale(0.98); 
+  from {
+    transform: translateY(15px) scale(0.98);
     opacity: 0;
   }
-  to { 
-    transform: translateY(0) scale(1); 
+  to {
+    transform: translateY(0) scale(1);
     opacity: 1;
   }
 }
@@ -215,24 +347,35 @@
 }
 
 @keyframes scale-in {
-  from { transform: scale(0.95); opacity: 0; }
-  to { transform: scale(1); opacity: 1; }
+  from {
+    transform: scale(0.95);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
 }
 
 @keyframes confetti {
-  0% { 
-    transform: translateY(0) rotate(0deg); 
+  0% {
+    transform: translateY(0) rotate(0deg);
     opacity: 1;
   }
-  100% { 
-    transform: translateY(-100px) rotate(720deg); 
+  100% {
+    transform: translateY(-100px) rotate(720deg);
     opacity: 0;
   }
 }
 
 @keyframes bounce-subtle {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-5px); }
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-5px);
+  }
 }
 
 /* Set energy selector style */
@@ -259,7 +402,7 @@
 }
 
 .task-checkbox::after {
-  content: '';
+  content: "";
   @apply absolute inset-0 scale-0 bg-primary opacity-0 rounded-full transition-all duration-300;
 }
 
@@ -273,7 +416,7 @@
 }
 
 .focus-mode-container::before {
-  content: '';
+  content: "";
   @apply absolute inset-0 bg-gradient-to-b from-background/80 to-background opacity-0 transition-opacity duration-700;
 }
 

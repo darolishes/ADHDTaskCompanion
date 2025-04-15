@@ -2,12 +2,7 @@ import type { Express, Request, Response } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { z } from "zod";
-import {
-  analyzeAndBreakdownTask,
-  getDailyFocusSuggestions,
-  predictTaskEmoji,
-  analyzeNaturalLanguageTask,
-} from "@adhd/ai-helpers";
+import { TaskAIService, AIProviderType } from "./ai";
 import {
   insertTaskSchema,
   insertTaskStepSchema,
@@ -17,6 +12,10 @@ import {
   PriorityLevel,
   CategoryType,
 } from "./schema";
+
+// Initialize the AI service
+// Default to Gemini, but can be switched via API
+const aiService = new TaskAIService("gemini");
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // GET all tasks
@@ -112,8 +111,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
         category,
       } = validationResult.data;
 
-      // Use Google Gemini to analyze and breakdown the task
-      const taskAnalysis = await analyzeAndBreakdownTask(title, energyLevel);
+      // Use AI service to analyze and breakdown the task
+      const taskAnalysis = await aiService.analyzeAndBreakdownTask(
+        title,
+        energyLevel
+      );
 
       // Create the main task
       const newTask = await storage.createTask({
@@ -477,8 +479,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
         const { title, description = "" } = validationResult.data;
 
-        // Rufe die Gemini-API für Emoji-Vorhersagen auf
-        const emojis = await predictTaskEmoji(title, description || "");
+        // Use AI service for emoji predictions
+        const emojis = await aiService.predictTaskEmoji(
+          title,
+          description || ""
+        );
 
         return res.json({ emojis });
       } catch (error) {
@@ -489,6 +494,124 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
     }
   );
+
+  // AI Provider Management
+  app.get("/api/ai/provider", (req: Request, res: Response) => {
+    try {
+      const providerType = aiService.getProviderType();
+      res.json({ provider: providerType });
+    } catch (error) {
+      console.error("Error getting AI provider:", error);
+      res.status(500).json({ error: "Failed to get AI provider" });
+    }
+  });
+
+  app.post("/api/ai/provider", async (req: Request, res: Response) => {
+    try {
+      const { provider } = req.body;
+
+      // Validate provider type
+      if (provider !== "gemini" && provider !== "openai") {
+        return res.status(400).json({
+          error: "Invalid provider type. Must be 'gemini' or 'openai'",
+        });
+      }
+
+      // Switch provider
+      aiService.switchProvider(provider as AIProviderType);
+
+      res.json({ provider, success: true });
+    } catch (error) {
+      console.error("Error switching AI provider:", error);
+      res.status(500).json({ error: "Failed to switch AI provider" });
+    }
+  });
+
+  // AI Provider Configuration Management
+  app.get("/api/ai/config", (req: Request, res: Response) => {
+    try {
+      // Get the current provider's configuration
+      const config = aiService.getConfig();
+      res.json(config);
+    } catch (error) {
+      console.error("Error getting AI configuration:", error);
+      res.status(500).json({ error: "Failed to get AI configuration" });
+    }
+  });
+
+  app.get("/api/ai/config/:provider", (req: Request, res: Response) => {
+    try {
+      const providerType = req.params.provider as AIProviderType;
+
+      // Validate provider type
+      if (providerType !== "gemini" && providerType !== "openai") {
+        return res.status(400).json({
+          error: "Invalid provider type. Must be 'gemini' or 'openai'",
+        });
+      }
+
+      // Get the specified provider's configuration
+      const config = aiService.getConfig(providerType);
+      res.json(config);
+    } catch (error) {
+      console.error("Error getting AI configuration:", error);
+      res.status(500).json({ error: "Failed to get AI configuration" });
+    }
+  });
+
+  app.patch("/api/ai/config", async (req: Request, res: Response) => {
+    try {
+      const config = req.body;
+
+      // Validate configuration
+      if (!config || typeof config !== "object") {
+        return res.status(400).json({
+          error: "Invalid configuration. Must be an object.",
+        });
+      }
+
+      // Update the current provider's configuration
+      aiService.updateConfig(config);
+
+      // Return the updated configuration
+      const updatedConfig = aiService.getConfig();
+      res.json(updatedConfig);
+    } catch (error) {
+      console.error("Error updating AI configuration:", error);
+      res.status(500).json({ error: "Failed to update AI configuration" });
+    }
+  });
+
+  app.patch("/api/ai/config/:provider", async (req: Request, res: Response) => {
+    try {
+      const providerType = req.params.provider as AIProviderType;
+      const config = req.body;
+
+      // Validate provider type
+      if (providerType !== "gemini" && providerType !== "openai") {
+        return res.status(400).json({
+          error: "Invalid provider type. Must be 'gemini' or 'openai'",
+        });
+      }
+
+      // Validate configuration
+      if (!config || typeof config !== "object") {
+        return res.status(400).json({
+          error: "Invalid configuration. Must be an object.",
+        });
+      }
+
+      // Update the specified provider's configuration
+      aiService.updateProviderConfig(providerType, config);
+
+      // Return the updated configuration
+      const updatedConfig = aiService.getConfig(providerType);
+      res.json(updatedConfig);
+    } catch (error) {
+      console.error("Error updating AI configuration:", error);
+      res.status(500).json({ error: "Failed to update AI configuration" });
+    }
+  });
 
   // Fokus für eine Aufgabe setzen oder entfernen
   app.patch("/api/tasks/:id/focus", async (req: Request, res: Response) => {
@@ -591,8 +714,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       const { input } = validationResult.data;
 
-      // Rufe die Gemini-API für NLP-Analyse auf
-      const analysis = await analyzeNaturalLanguageTask(input);
+      // Use AI service for NLP analysis
+      const analysis = await aiService.analyzeNaturalLanguageTask(input);
 
       return res.json(analysis);
     } catch (error) {
@@ -612,8 +735,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Hole alle Aufgaben
       const tasks = await storage.getTasks();
 
-      // Hole KI-Vorschläge für täglichen Fokus
-      const focusSuggestions = await getDailyFocusSuggestions(
+      // Get AI suggestions for daily focus
+      const focusSuggestions = await aiService.getDailyFocusSuggestions(
         tasks,
         energyLevel
       );

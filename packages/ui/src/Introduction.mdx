@@ -1,0 +1,70 @@
+import { Meta } from '@storybook/blocks';
+
+<Meta title="Introduction" />
+
+# ADHD Task Companion UI Components
+
+This Storybook showcases the UI components used in the ADHD Task Companion application.
+
+## Component Categories
+
+- **Task Components**: Components for displaying and interacting with tasks
+- **Feedback Components**: Components for providing feedback to users
+- **Layout Components**: Components for structuring the UI
+
+## Usage Guidelines
+
+### Installation
+
+```bash
+pnpm install @repo/ui
+```
+
+### Importing Components
+
+```jsx
+import { TaskCard, TaskCheckbox, TaskAction, LoadingSpinner } from "@repo/ui";
+```
+
+### Importing Styles
+
+```jsx
+import "@repo/ui/styles.css";
+```
+
+## Design Principles
+
+1. **Simplicity**: Components should be simple and focused on a single responsibility
+2. **Consistency**: Components should follow consistent patterns and styling
+3. **Accessibility**: Components should be accessible to all users
+4. **Flexibility**: Components should be flexible enough to handle various use cases
+
+## Tailwind CSS Integration
+
+This component library uses Tailwind CSS for styling. All components use the `ui-` prefix for Tailwind classes to avoid conflicts with the application's styles.
+
+### Using the `cn()` Utility
+
+The `cn()` utility function is used to conditionally apply classes:
+
+```jsx
+import { cn } from "@repo/ui";
+
+<div className={cn(
+  "base-class",
+  condition && "conditional-class",
+  anotherCondition ? "true-class" : "false-class"
+)}>
+  Content
+</div>
+```
+
+## Contributing
+
+When adding new components or modifying existing ones, please follow these guidelines:
+
+1. Create a story for each component
+2. Document the component's props and usage
+3. Ensure the component is accessible
+4. Use the `cn()` utility for class merging
+5. Follow the existing naming conventions

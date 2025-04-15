@@ -1,0 +1,224 @@
+import { Meta, Story, Canvas } from '@storybook/blocks';
+
+<Meta title="CSS Utilities/Overview" />
+
+# CSS Utility Classes
+
+This component library provides a set of CSS utility classes that can be used to maintain consistent styling across the application.
+
+## Card Components
+
+```jsx
+<div className="card-base">
+  Basic card with consistent styling
+</div>
+
+<div className="card-interactive">
+  Interactive card with hover effects
+</div>
+```
+
+<Canvas>
+  <div className="flex flex-col space-y-4">
+    <div className="card-base p-4">
+      <h3 className="text-lg font-medium mb-2">Basic Card</h3>
+      <p>This is a basic card with consistent styling.</p>
+    </div>
+    
+    <div className="card-interactive p-4">
+      <h3 className="text-lg font-medium mb-2">Interactive Card</h3>
+      <p>This card has hover effects. Try hovering over it!</p>
+    </div>
+  </div>
+</Canvas>
+
+## Layout Components
+
+```jsx
+<div className="flex-center">
+  Centered content
+</div>
+
+<div className="flex-between">
+  <span>Left content</span>
+  <span>Right content</span>
+</div>
+```
+
+<Canvas>
+  <div className="flex flex-col space-y-4">
+    <div className="flex-center h-20 bg-gray-100 rounded">
+      Centered content
+    </div>
+    
+    <div className="flex-between h-20 bg-gray-100 rounded p-4">
+      <span>Left content</span>
+      <span>Right content</span>
+    </div>
+  </div>
+</Canvas>
+
+## Task Components
+
+```jsx
+<div className="task-container">
+  Task content
+</div>
+
+<div className="task-container-interactive">
+  Interactive task content
+</div>
+
+<h3 className="task-title">Task Title</h3>
+
+<div className="task-metadata">
+  <span>Task metadata</span>
+</div>
+
+<button className="task-action-button">
+  Action
+</button>
+
+<button className="task-checkbox-unchecked"></button>
+<button className="task-checkbox-checked"></button>
+```
+
+<Canvas>
+  <div className="flex flex-col space-y-4">
+    <div className="task-container p-4">
+      <h3 className="task-title">Regular Task</h3>
+      <div className="task-metadata mt-1">
+        <span>Due tomorrow</span>
+      </div>
+    </div>
+    
+    <div className="task-container-interactive p-4">
+      <div className="flex items-center gap-4">
+        <button className="task-checkbox-unchecked"></button>
+        <div>
+          <h3 className="task-title">Interactive Task</h3>
+          <div className="task-metadata mt-1">
+            <span>Due tomorrow</span>
+          </div>
+        </div>
+        <button className="task-action-button ml-auto">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <polygon points="5 3 19 12 5 21 5 3"></polygon>
+          </svg>
+        </button>
+      </div>
+    </div>
+    
+    <div className="task-container-interactive p-4">
+      <div className="flex items-center gap-4">
+        <button className="task-checkbox-checked"></button>
+        <div>
+          <h3 className="task-title">Completed Task</h3>
+          <div className="task-metadata mt-1">
+            <span>Completed yesterday</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</Canvas>
+
+## Task Step Components
+
+```jsx
+<li className="task-step task-step-completed">
+  <div className="task-step-indicator task-step-indicator-completed">
+    ✓
+  </div>
+  <p className="task-step-text task-step-text-completed">
+    Completed step
+  </p>
+</li>
+
+<li className="task-step task-step-current">
+  <div className="task-step-indicator task-step-indicator-current">
+    2
+  </div>
+  <p className="task-step-text task-step-text-current">
+    Current step
+  </p>
+</li>
+
+<li className="task-step task-step-upcoming">
+  <div className="task-step-indicator task-step-indicator-upcoming">
+    3
+  </div>
+  <p className="task-step-text">
+    Upcoming step
+  </p>
+</li>
+```
+
+<Canvas>
+  <ul className="space-y-2">
+    <li className="task-step task-step-completed">
+      <div className="task-step-indicator task-step-indicator-completed">
+        <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+          <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+        </svg>
+      </div>
+      <p className="task-step-text task-step-text-completed">
+        Research project requirements
+      </p>
+    </li>
+    
+    <li className="task-step task-step-current">
+      <div className="task-step-indicator task-step-indicator-current">
+        <span className="text-xs">2</span>
+      </div>
+      <p className="task-step-text task-step-text-current">
+        Create project outline
+      </p>
+    </li>
+    
+    <li className="task-step task-step-upcoming">
+      <div className="task-step-indicator task-step-indicator-upcoming">
+        <span className="text-xs">3</span>
+      </div>
+      <p className="task-step-text">
+        Write first draft
+      </p>
+    </li>
+  </ul>
+</Canvas>
+
+## Loading States
+
+```jsx
+<div className="loading-spinner"></div>
+<p className="loading-text">Loading...</p>
+```
+
+<Canvas>
+  <div className="flex flex-col items-center space-y-2">
+    <div className="loading-spinner"></div>
+    <p className="loading-text">Loading...</p>
+  </div>
+</Canvas>
+
+## Best Practices
+
+1. Use the `cn()` utility function to conditionally apply classes:
+
+```jsx
+import { cn } from "@repo/ui";
+
+<div className={cn(
+  "base-class",
+  condition && "conditional-class",
+  anotherCondition ? "true-class" : "false-class"
+)}>
+  Content
+</div>
+```
+
+2. Prefer using the provided components over creating new ones with similar functionality.
+
+3. When creating new components, follow the same pattern of using the `cn()` utility for class merging.
+
+4. Use the CSS utility classes to maintain consistent styling across the application.

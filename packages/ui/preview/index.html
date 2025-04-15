@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>UI Component Preview</title>
+  <link rel="stylesheet" href="../dist/index.css">
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+      margin: 0;
+      padding: 20px;
+      background-color: #f5f5f5;
+    }
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      background-color: white;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+    .component-section {
+      margin-bottom: 40px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid #eee;
+    }
+    .component-title {
+      font-size: 24px;
+      margin-bottom: 16px;
+      color: #333;
+    }
+    .component-description {
+      margin-bottom: 16px;
+      color: #666;
+    }
+    .component-preview {
+      padding: 20px;
+      border: 1px solid #eee;
+      border-radius: 4px;
+      margin-bottom: 16px;
+    }
+    .component-code {
+      background-color: #f7f7f7;
+      padding: 16px;
+      border-radius: 4px;
+      overflow-x: auto;
+      font-family: monospace;
+    }
+    .component-variants {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      margin-top: 16px;
+    }
+    .variant {
+      padding: 16px;
+      border: 1px solid #eee;
+      border-radius: 4px;
+      min-width: 200px;
+    }
+    .variant-title {
+      font-size: 14px;
+      font-weight: bold;
+      margin-bottom: 8px;
+      color: #666;
+    }
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 24px;
+    }
+    nav {
+      position: sticky;
+      top: 0;
+      background-color: white;
+      padding: 16px 0;
+      margin-bottom: 24px;
+      border-bottom: 1px solid #eee;
+    }
+    nav ul {
+      display: flex;
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      gap: 16px;
+    }
+    nav a {
+      text-decoration: none;
+      color: #333;
+      font-weight: 500;
+    }
+    nav a:hover {
+      color: #0066cc;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>ADHD Task Companion UI Components</h1>
+      <p>A visual preview of the UI component library</p>
+    </header>
+
+    <nav>
+      <ul>
+        <li><a href="#typography">Typography</a></li>
+        <li><a href="#buttons">Buttons</a></li>
+        <li><a href="#badges">Badges</a></li>
+        <li><a href="#cards">Cards</a></li>
+        <li><a href="#progress">Progress</a></li>
+        <li><a href="#task-components">Task Components</a></li>
+      </ul>
+    </nav>
+
+    <!-- Typography Section -->
+    <section id="typography" class="component-section">
+      <h2 class="component-title">Typography</h2>
+      <p class="component-description">Typography components for consistent text styling.</p>
+      
+      <div class="component-variants">
+        <div class="variant">
+          <div class="variant-title">Heading (H1)</div>
+          <div class="component-preview">
+            <h1 class="ui-text-4xl ui-font-bold ui-tracking-tight">Heading 1</h1>
+          </div>
+        </div>
+        
+        <div class="variant">
+          <div class="variant-title">Heading (H2)</div>
+          <div class="component-preview">
+            <h2 class="ui-text-2xl ui-font-semibold ui-tracking-tight">Heading 2</h2>
+          </div>
+        </div>
+        
+        <div class="variant">
+          <div class="variant-title">Text (Default)</div>
+          <div class="component-preview">
+            <p class="ui-text-base">Default text style for paragraphs.</p>
+          </div>
+        </div>
+        
+        <div class="variant">
+          <div class="variant-title">Text (Muted)</div>
+          <div class="component-preview">
+            <p class="ui-text-sm ui-text-muted-foreground">Muted text for less emphasis.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Buttons Section -->
+    <section id="buttons" class="component-section">
+      <h2 class="component-title">Buttons</h2>
+      <p class="component-description">Button components for user interactions.</p>
+      
+      <div class="component-variants">
+        <div class="variant">
+          <div class="variant-title">Default Button</div>
+          <div class="component-preview">
+            <button class="ui-inline-flex ui-items-center ui-justify-center ui-whitespace-nowrap ui-rounded-md ui-text-sm ui-font-medium ui-ring-offset-background ui-transition-colors ui-focus-visible:ui-outline-none ui-focus-visible:ui-ring-2 ui-focus-visible:ui-ring-ring ui-focus-visible:ui-ring-offset-2 ui-disabled:ui-pointer-events-none ui-disabled:ui-opacity-50 ui-bg-primary ui-text-primary-foreground ui-hover:ui-bg-primary/90 ui-h-10 ui-px-4 ui-py-2">
+              Button
+            </button>
+          </div>
+        </div>
+        
+        <div class="variant">
+          <div class="variant-title">Secondary Button</div>
+          <div class="component-preview">
+            <button class="ui-inline-flex ui-items-center ui-justify-center ui-whitespace-nowrap ui-rounded-md ui-text-sm ui-font-medium ui-ring-offset-background ui-transition-colors ui-focus-visible:ui-outline-none ui-focus-visible:ui-ring-2 ui-focus-visible:ui-ring-ring ui-focus-visible:ui-ring-offset-2 ui-disabled:ui-pointer-events-none ui-disabled:ui-opacity-50 ui-bg-secondary ui-text-secondary-foreground ui-hover:ui-bg-secondary/80 ui-h-10 ui-px-4 ui-py-2">
+              Secondary
+            </button>
+          </div>
+        </div>
+        
+        <div class="variant">
+          <div class="variant-title">Outline Button</div>
+          <div class="component-preview">
+            <button class="ui-inline-flex ui-items-center ui-justify-center ui-whitespace-nowrap ui-rounded-md ui-text-sm ui-font-medium ui-ring-offset-background ui-transition-colors ui-focus-visible:ui-outline-none ui-focus-visible:ui-ring-2 ui-focus-visible:ui-ring-ring ui-focus-visible:ui-ring-offset-2 ui-disabled:ui-pointer-events-none ui-disabled:ui-opacity-50 ui-border ui-border-input ui-bg-background ui-hover:ui-bg-accent ui-hover:ui-text-accent-foreground ui-h-10 ui-px-4 ui-py-2">
+              Outline
+            </button>
+          </div>
+        </div>
+        
+        <div class="variant">
+          <div class="variant-title">Ghost Button</div>
+          <div class="component-preview">
+            <button class="ui-inline-flex ui-items-center ui-justify-center ui-whitespace-nowrap ui-rounded-md ui-text-sm ui-font-medium ui-ring-offset-background ui-transition-colors ui-focus-visible:ui-outline-none ui-focus-visible:ui-ring-2 ui-focus-visible:ui-ring-ring ui-focus-visible:ui-ring-offset-2 ui-disabled:ui-pointer-events-none ui-disabled:ui-opacity-50 ui-hover:ui-bg-accent ui-hover:ui-text-accent-foreground ui-h-10 ui-px-4 ui-py-2">
+              Ghost
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Badges Section -->
+    <section id="badges" class="component-section">
+      <h2 class="component-title">Badges</h2>
+      <p class="component-description">Badge components for displaying status and metadata.</p>
+      
+      <div class="component-variants">
+        <div class="variant">
+          <div class="variant-title">Energy Level Badge (High)</div>
+          <div class="component-preview">
+            <span class="ui-inline-flex ui-items-center ui-px-2.5 ui-py-0.5 ui-rounded-full ui-text-xs ui-font-medium ui-border ui-bg-indigo-100 ui-text-indigo-800 ui-border-indigo-300">
+              <span class="ui-mr-1">⚡️</span>
+              Hohe Energie
+            </span>
+          </div>
+        </div>
+        
+        <div class="variant">
+          <div class="variant-title">Energy Level Badge (Medium)</div>
+          <div class="component-preview">
+            <span class="ui-inline-flex ui-items-center ui-px-2.5 ui-py-0.5 ui-rounded-full ui-text-xs ui-font-medium ui-border ui-bg-blue-100 ui-text-blue-800 ui-border-blue-300">
+              <span class="ui-mr-1">⚙️</span>
+              Mittlere Energie
+            </span>
+          </div>
+        </div>
+        
+        <div class="variant">
+          <div class="variant-title">Priority Badge (High)</div>
+          <div class="component-preview">
+            <span class="ui-inline-flex ui-items-center ui-px-2.5 ui-py-0.5 ui-rounded-full ui-text-xs ui-font-medium ui-border ui-bg-red-100 ui-text-red-800 ui-border-red-300">
+              <span class="ui-mr-1">🔴</span>
+              Hohe Priorität
+            </span>
+          </div>
+        </div>
+        
+        <div class="variant">
+          <div class="variant-title">Priority Badge (Low)</div>
+          <div class="component-preview">
+            <span class="ui-inline-flex ui-items-center ui-px-2.5 ui-py-0.5 ui-rounded-full ui-text-xs ui-font-medium ui-border ui-bg-green-100 ui-text-green-800 ui-border-green-300">
+              <span class="ui-mr-1">🟢</span>
+              Niedrige Priorität
+            </span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Cards Section -->
+    <section id="cards" class="component-section">
+      <h2 class="component-title">Cards</h2>
+      <p class="component-description">Card components for displaying content in containers.</p>
+      
+      <div class="component-variants">
+        <div class="variant">
+          <div class="variant-title">Basic Card</div>
+          <div class="component-preview">
+            <div class="ui-rounded-lg ui-border ui-border-border ui-bg-card ui-text-card-foreground ui-shadow-sm ui-p-6">
+              <h3 class="ui-text-lg ui-font-semibold ui-leading-none ui-tracking-tight ui-mb-2">Card Title</h3>
+              <p class="ui-text-sm ui-text-muted-foreground ui-mb-4">Card description goes here.</p>
+              <div class="ui-p-6 ui-pt-0">Card content</div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="variant">
+          <div class="variant-title">Interactive Card</div>
+          <div class="component-preview">
+            <div class="ui-rounded-lg ui-border ui-border-border ui-bg-card ui-text-card-foreground ui-shadow-sm ui-transition-all ui-duration-300 hover:ui-shadow-md hover:ui-border-primary/20 hover:ui-bg-accent/5 ui-p-6">
+              <h3 class="ui-text-lg ui-font-semibold ui-leading-none ui-tracking-tight ui-mb-2">Interactive Card</h3>
+              <p class="ui-text-sm ui-text-muted-foreground ui-mb-4">Hover over this card to see the effect.</p>
+              <div class="ui-p-6 ui-pt-0">Card content</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Progress Section -->
+    <section id="progress" class="component-section">
+      <h2 class="component-title">Progress</h2>
+      <p class="component-description">Progress indicators for showing completion status.</p>
+      
+      <div class="component-variants">
+        <div class="variant">
+          <div class="variant-title">Progress Bar (Default)</div>
+          <div class="component-preview">
+            <div class="ui-w-full">
+              <div class="ui-flex ui-justify-between ui-items-center ui-mb-1">
+                <span class="ui-text-xs ui-text-muted-foreground">Progress</span>
+                <span class="ui-text-xs ui-font-medium">50%</span>
+              </div>
+              <div class="ui-w-full ui-bg-muted ui-rounded-full ui-overflow-hidden ui-h-2.5">
+                <div class="ui-transition-all ui-ease-in-out ui-duration-500 ui-rounded-full ui-bg-primary ui-h-2.5" style="width: 50%"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="variant">
+          <div class="variant-title">Progress Bar (Success)</div>
+          <div class="component-preview">
+            <div class="ui-w-full">
+              <div class="ui-w-full ui-bg-muted ui-rounded-full ui-overflow-hidden ui-h-2.5">
+                <div class="ui-transition-all ui-ease-in-out ui-duration-500 ui-rounded-full ui-bg-green-500 ui-h-2.5" style="width: 75%"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="variant">
+          <div class="variant-title">Progress Bar (Warning)</div>
+          <div class="component-preview">
+            <div class="ui-w-full">
+              <div class="ui-w-full ui-bg-muted ui-rounded-full ui-overflow-hidden ui-h-2.5">
+                <div class="ui-transition-all ui-ease-in-out ui-duration-500 ui-rounded-full ui-bg-yellow-500 ui-h-2.5" style="width: 35%"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Task Components Section -->
+    <section id="task-components" class="component-section">
+      <h2 class="component-title">Task Components</h2>
+      <p class="component-description">Components for displaying and interacting with tasks.</p>
+      
+      <div class="component-variants">
+        <div class="variant">
+          <div class="variant-title">Task Checkbox</div>
+          <div class="component-preview">
+            <button type="button" role="checkbox" aria-checked="false" class="ui-rounded-full ui-flex ui-items-center ui-justify-center ui-transition-colors ui-border-2 ui-border-muted-foreground/40 hover:ui-border-primary ui-w-5 ui-h-5"></button>
+            <div class="ui-h-4"></div>
+            <button type="button" role="checkbox" aria-checked="true" class="ui-rounded-full ui-flex ui-items-center ui-justify-center ui-transition-colors ui-bg-primary ui-border-0 ui-w-5 ui-h-5">
+              <svg xmlns="http://www.w3.org/2000/svg" class="ui-h-3.5 ui-w-3.5 ui-text-primary-foreground" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+              </svg>
+            </button>
+          </div>
+        </div>
+        
+        <div class="variant">
+          <div class="variant-title">Task Action</div>
+          <div class="component-preview">
+            <button class="ui-p-1.5 ui-rounded-full ui-transition-colors ui-flex ui-items-center ui-justify-center ui-text-muted-foreground hover:ui-text-primary hover:ui-bg-muted">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polygon points="5 3 19 12 5 21 5 3"></polygon>
+              </svg>
+            </button>
+          </div>
+        </div>
+        
+        <div class="variant">
+          <div class="variant-title">Task Step</div>
+          <div class="component-preview">
+            <ul class="ui-space-y-2">
+              <li class="task-step task-step-completed">
+                <div class="task-step-indicator task-step-indicator-completed">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="ui-h-4 ui-w-4" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+                  </svg>
+                </div>
+                <p class="task-step-text task-step-text-completed">
+                  Completed step
+                </p>
+              </li>
+              
+              <li class="task-step task-step-current">
+                <div class="task-step-indicator task-step-indicator-current">
+                  <span class="ui-text-xs">2</span>
+                </div>
+                <p class="task-step-text task-step-text-current">
+                  Current step
+                </p>
+              </li>
+              
+              <li class="task-step task-step-upcoming">
+                <div class="task-step-indicator task-step-indicator-upcoming">
+                  <span class="ui-text-xs">3</span>
+                </div>
+                <p class="task-step-text">
+                  Upcoming step
+                </p>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    // Simple script to highlight the current section in the navigation
+    const sections = document.querySelectorAll('.component-section');
+    const navLinks = document.querySelectorAll('nav a');
+    
+    window.addEventListener('scroll', () => {
+      let current = '';
+      
+      sections.forEach(section => {
+        const sectionTop = section.offsetTop;
+        const sectionHeight = section.clientHeight;
+        if (pageYOffset >= sectionTop - 100) {
+          current = section.getAttribute('id');
+        }
+      });
+      
+      navLinks.forEach(link => {
+        link.style.fontWeight = '500';
+        if (link.getAttribute('href').substring(1) === current) {
+          link.style.fontWeight = '700';
+          link.style.color = '#0066cc';
+        }
+      });
+    });
+  </script>
+</body>
+</html>

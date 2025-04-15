@@ -287,9 +287,9 @@ export class MemStorage implements IStorage {
     userId: number,
     timeframe: string
   ): Promise<ProductivityAnalyticsResponse> {
-    // Logik zur Generierung von Analysen basierend auf dem Timeframe
-    // Placeholder für die Entwicklung
-    return {
+    // Placeholder for development
+    // Replace this with actual logic to generate analytics based on the timeframe
+    const defaultResponse: ProductivityAnalyticsResponse = {
       summary: {
         totalTasksCompleted: 0,
         totalTimeSpent: 0,
@@ -304,6 +304,8 @@ export class MemStorage implements IStorage {
       },
       dailyStats: [],
     };
+
+    return defaultResponse;
   }
 
   async updateProductivityAnalytics(userId: number, date: Date): Promise<void> {
